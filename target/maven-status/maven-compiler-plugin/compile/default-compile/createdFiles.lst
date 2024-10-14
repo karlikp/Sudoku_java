@@ -1,0 +1,4 @@
+Controller\Main.class
+Controller\GameController.class
+View\GameView.class
+Model\Player.class
