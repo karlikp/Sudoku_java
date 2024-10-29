@@ -14,40 +14,40 @@ import java.util.Scanner;
  */
 public class GameView {
     
-    /** Scanner to capture user input from the console. */
-    private Scanner scanner = new Scanner(System.in);
-
-   /**
-     * Prompts the user to enter their name and returns the input.
-     *
-     * @return the name entered by the user
-     */
-    public String downloadName() {
-        System.out.print("Type in your name: ");
-        return scanner.nextLine();
-    }
-
-    /**
-     * Displays difficulty level options and prompts the user to select one.
-     *
-     * @return the difficulty level chosen by the user as an integer (1, 2, or 3)
-     */
-    public String downloadDifficultyLevel() {
-        System.out.println("Choose difficulty level:");
-        System.out.println("1. Easy");
-        System.out.println("2. Medium");
-        System.out.println("3. Hard");
-        System.out.print("Type in difficulty lavel number (1, 2 lub 3): ");
-        return scanner.nextLine();
-    }
-
-     /**
-     * Displays a greeting message to the player, showing their name and chosen difficulty level.
-     *
-     * @param name the player's name
-     * @param difficultyLevel the chosen difficulty level as a string
-     */
-    public void showGreeting(String name, String difficultyLevel) {
-        System.out.println("\nHello, " + name + "! You chose difficulty level: " + difficultyLevel + ".");
-    }
+//    /** Scanner to capture user input from the console. */
+//    private Scanner scanner = new Scanner(System.in);
+//
+//   /**
+//     * Prompts the user to enter their name and returns the input.
+//     *
+//     * @return the name entered by the user
+//     */
+//    public String downloadName() {
+//        System.out.print("Type in your name: ");
+//        return scanner.nextLine();
+//    }
+//
+//    /**
+//     * Displays difficulty level options and prompts the user to select one.
+//     *
+//     * @return the difficulty level chosen by the user as an integer (1, 2, or 3)
+//     */
+//    public String downloadDifficultyLevel() {
+//        System.out.println("Choose difficulty level:");
+//        System.out.println("1. Easy");
+//        System.out.println("2. Medium");
+//        System.out.println("3. Hard");
+//        System.out.print("Type in difficulty lavel number (1, 2 lub 3): ");
+//        return scanner.nextLine();
+//    }
+//
+//     /**
+//     * Displays a greeting message to the player, showing their name and chosen difficulty level.
+//     *
+//     * @param name the player's name
+//     * @param difficultyLevel the chosen difficulty level as a string
+//     */
+//    public void showGreeting(String name, String difficultyLevel) {
+//        System.out.println("\nHello, " + name + "! You chose difficulty level: " + difficultyLevel + ".");
+//    }
 }

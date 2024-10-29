@@ -25,14 +25,22 @@ public class Main {
      * </p>
      *
      * @param args command-line arguments passed during the application launch
+     *  - first argument is used to set user name
+     *  - second argument is used to set difficulty level
      */
     public static void main(String[] args) {
         // Creating model (Player), view (GameView) and controller (GameController)
         Player model = new Player("", "");  
-        GameView view = new GameView();     
+        SudokuFrame view = new SudokuFrame();     
         GameController controller = new GameController(model, view);  
 
         // Starting game
         controller.GameStart(args);  // Controller manage interaction between model and view
+        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new SudokuFrame().setVisible(true);
+            }
+        });
     }
 }

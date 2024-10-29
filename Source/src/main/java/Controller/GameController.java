@@ -22,7 +22,7 @@ public class GameController {
     final private Player model;
     
     /** The view for interacting with the user. */
-    final private GameView view;
+    final private SudokuFrame view;
 
     /**
      * Constructs a new GameController with the specified model and view.
@@ -30,7 +30,7 @@ public class GameController {
      * @param model the Player model containing player data
      * @param view the GameView instance for user interaction
      */
-    public GameController(Player model, GameView view) {
+    public GameController(Player model, SudokuFrame view) {
         this.model = model;
         this.view = view;
     }
@@ -114,6 +114,6 @@ public class GameController {
         }
 
         // Show gretting
-        view.showGreeting(model.getName(), model.getDifficultyLevel());
+        //view.showGreeting(model.getName(), model.getDifficultyLevel());
     }
 }
