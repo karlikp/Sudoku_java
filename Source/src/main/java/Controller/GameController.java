@@ -22,7 +22,7 @@ public class GameController {
     final private Player model;
     
     /** The view for interacting with the user. */
-    final private SudokuFrame view;
+    final private InitFrame view;
 
     /**
      * Constructs a new GameController with the specified model and view.
@@ -30,7 +30,7 @@ public class GameController {
      * @param model the Player model containing player data
      * @param view the GameView instance for user interaction
      */
-    public GameController(Player model, SudokuFrame view) {
+    public GameController(Player model, InitFrame view) {
         this.model = model;
         this.view = view;
     }
@@ -47,14 +47,14 @@ public class GameController {
         try {
                 level = Integer.parseInt(arg); // Second argument is difficulty level
             } catch (NumberFormatException e) {    //Exception 
-                System.out.println("Difficulty level must be an integer. Setting to default level: 1 (Easy).");
+                new MessageFrame("Difficulty level must be an integer. Setting to default level: 1 (Easy).");
                 level = 1; // Set default difficulty level
             }
         return level;
     }
 
     /**
-     * Starts the game, handling input for the player's name and difficulty level.
+     * Initialization the game, handling input for the player's name and difficulty level.
      * <p>
      * If the name and difficulty level are provided as command-line arguments, 
      * they are used; otherwise, the view prompts the user for input. The method 
@@ -64,7 +64,7 @@ public class GameController {
      * @param args command-line arguments (expected: player's name and difficulty 
      * level as an integer)
      */
-    public void GameStart(String[] args) {
+    public void GameInit(String[] args) {
         
         String name;
         String tempLevel;

@@ -31,15 +31,16 @@ public class Main {
     public static void main(String[] args) {
         // Creating model (Player), view (GameView) and controller (GameController)
         Player model = new Player("", "");  
-        SudokuFrame view = new SudokuFrame();     
+        InitFrame view = new InitFrame();     
         GameController controller = new GameController(model, view);  
 
         // Starting game
-        controller.GameStart(args);  // Controller manage interaction between model and view
+        controller.GameInit(args);  // Controller manage interaction between model and view
         
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SudokuFrame().setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() { //java.awt - package: Abstract Window Toolkit
+            public void run() {                          //EventQueue - class, invokeLaer - method
+                new InitFrame().setVisible(true);
+                
             }
         });
     }

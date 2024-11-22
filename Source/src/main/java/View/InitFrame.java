@@ -9,7 +9,7 @@ package View;
  *
  * @author Karol Pitera
  */
-public class SudokuFrame extends javax.swing.JFrame {
+public class InitFrame extends javax.swing.JFrame {
     
     private String name;
     private String difficultyLevel;
@@ -17,8 +17,9 @@ public class SudokuFrame extends javax.swing.JFrame {
     /**
      * Creates new form SudokuFrame
      */
-    public SudokuFrame() {
+    public InitFrame() {
         initComponents();
+        setLocationRelativeTo(null); // This will center the frame on the screen
     }
 
     /**
@@ -30,6 +31,7 @@ public class SudokuFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        enterButton1 = new javax.swing.JButton();
         jLabelName = new javax.swing.JLabel();
         userName = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -39,6 +41,11 @@ public class SudokuFrame extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         finalName = new javax.swing.JLabel();
         finalDifficultyLevel = new javax.swing.JLabel();
+        enterButton2 = new javax.swing.JButton();
+
+        enterButton1.setMnemonic('E');
+        enterButton1.setText("Enter");
+        enterButton1.setToolTipText("Set your choice");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -79,6 +86,15 @@ public class SudokuFrame extends javax.swing.JFrame {
 
         finalDifficultyLevel.setText("finalDifficultyLevel");
 
+        enterButton2.setMnemonic('E');
+        enterButton2.setText("Enter");
+        enterButton2.setToolTipText("Set your choice");
+        enterButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enterButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -95,19 +111,25 @@ public class SudokuFrame extends javax.swing.JFrame {
                             .addComponent(userName, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(levelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(finalName, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(finalDifficultyLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(110, 110, 110))))
+                        .addGap(74, 74, 74))))
             .addGroup(layout.createSequentialGroup()
-                .addGap(131, 131, 131)
-                .addComponent(enterButton)
-                .addGap(49, 49, 49))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(139, 139, 139)
+                        .addComponent(enterButton2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(145, 145, 145)
+                        .addComponent(enterButton)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -120,17 +142,19 @@ public class SudokuFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(levelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                .addGap(18, 18, 18)
                 .addComponent(enterButton)
-                .addGap(41, 41, 41)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(finalName))
-                .addGap(24, 24, 24)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(finalDifficultyLevel))
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addGap(38, 38, 38)
+                .addComponent(enterButton2)
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         pack();
@@ -151,6 +175,10 @@ public class SudokuFrame extends javax.swing.JFrame {
         finalName.setText(name);
         finalDifficultyLevel.setText(level);
     }//GEN-LAST:event_enterButtonActionPerformed
+
+    private void enterButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_enterButton2ActionPerformed
 
     
     public String downloadName() {
@@ -199,6 +227,8 @@ public class SudokuFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton enterButton;
+    private javax.swing.JButton enterButton1;
+    private javax.swing.JButton enterButton2;
     private javax.swing.JLabel finalDifficultyLevel;
     private javax.swing.JLabel finalName;
     private javax.swing.JLabel jLabel1;
