@@ -1,10 +1,19 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package View;
 
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.MatteBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -14,25 +23,104 @@ public class GameplayFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form GameplayFrame
+     * @param userName
+     * @param difficultyLevel
      */
     // Constructor to initialize the frame
     public GameplayFrame(String userName, String difficultyLevel) {
         initComponents();
-        jLabel2.setText(userName);  // Display user name
-        jLabel4.setText(difficultyLevel);  // Display difficulty level
+        setLocationRelativeTo(null); // This will center the frame on the screen
+        nameLabel.setText(userName);  // Display user name
+        lavelLabel.setText(difficultyLevel);  // Display difficulty level
         setupSudokuTable();  // Set up the Sudoku grid
+        
+        
     }
     
-    // Method to initialize the Sudoku table
-    private void setupSudokuTable() {
-        // Set a 9x9 grid for Sudoku
-        DefaultTableModel model = new DefaultTableModel(9, 9);
-        jTable1.setModel(model);
-        jTable1.setRowHeight(40);  // Set row height for better visibility
-        jTable1.setColumnWidth(0, 40); // Set column width for all columns
-        jTable1.setDefaultEditor(Object.class, null);  // Disable editing in the cells
+   
+    
+// Method to initialize the Sudoku table
+private void setupSudokuTable() {
+    
+     String[] columnHeaders = {"A", "B", "C", "D", "E", "F", "G", "H", "I"};
+    // Set a 9x9 grid for Sudoku
+    DefaultTableModel model = new DefaultTableModel(9, 9) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return true; // Allow editing for user input
+        }
+    };
+    model.setColumnIdentifiers(columnHeaders); // Set column headers
+    sudokuTable.setModel(model);
+    sudokuTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+   
+     String[] rowHeaders = {"a", "b", "c", "d", "e", "f", "g", "h", "i"};
+     
+     JTable rowHeaderTable = new JTable(new DefaultTableModel(rowHeaders.length, 1)) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; // Row headers should not be editable
+        }
+    };
+     
+         // Populate row header table with row titles
+    for (int i = 0; i < rowHeaders.length; i++) {
+        rowHeaderTable.setValueAt(rowHeaders[i], i, 0);
     }
+     // Set row header properties
+    rowHeaderTable.setRowHeight(67); // Match the row height of the Sudoku table
+    rowHeaderTable.setPreferredScrollableViewportSize(new Dimension(20, sudokuTable.getHeight()));
+    rowHeaderTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            JLabel label = new JLabel(String.valueOf(value), JLabel.CENTER);
+            label.setFont(sudokuTable.getFont());
+            label.setOpaque(true);
+            //label.setBackground(Color.LIGHT_GRAY); // Background for row headers
+            return label;
+        }
+    });
+    
 
+    // Apply a custom renderer for bold grid lines
+    sudokuTable.setDefaultRenderer(Object.class, new SudokuCellRenderer());
+    sudokuPanel.setRowHeaderView(rowHeaderTable);
+    
+ 
+}
+
+// Custom Renderer for Sudoku cells
+class SudokuCellRenderer extends DefaultTableCellRenderer {
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        // Get the default cell renderer
+        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+        // Ensure the cell is a JComponent for styling
+        if (c instanceof JComponent) {
+            JComponent jc = (JComponent) c;
+
+            // Apply borders for bold lines in 3x3 sub-grids
+            int top = (row == 3 || row == 6) ? 3 : 1; // Bold lines between row 3-4 and 6-7
+            int left = (column == 3 || column == 6) ? 3 : 1; // Bold lines between column 3-4 and 6-7
+            int bottom = 1;
+            int right = 1;
+
+            // Set the border for the cell
+            jc.setBorder(BorderFactory.createMatteBorder(top, left, bottom, right, Color.BLACK));
+        }
+
+        // Set background and foreground colors
+        if ((row / 3 + column / 3) % 2 == 0) {
+            c.setBackground(Color.LIGHT_GRAY); // Alternating 3x3 sub-grid background color
+        } else {
+            c.setBackground(Color.WHITE);
+        }
+        c.setForeground(Color.BLACK);
+
+        return c;
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,146 +130,145 @@ public class GameplayFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jTable1 = new javax.swing.JTable<>();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        nameMessageLabel = new javax.swing.JLabel();
+        nameLabel = new javax.swing.JLabel();
+        levelMessageLabel = new javax.swing.JLabel();
+        lavelLabel = new javax.swing.JLabel();
+        RoundMessageLabel = new javax.swing.JLabel();
+        numberRoundLabel = new javax.swing.JLabel();
+        sudokuPanel = new javax.swing.JScrollPane();
+        sudokuTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("User:");
+        nameMessageLabel.setText("Name");
 
-        jLabel2.setText("userName");
+        nameLabel.setText("userName");
 
-        jLabel3.setText("Difficulty level:");
+        levelMessageLabel.setText("Level:");
 
-        jLabel4.setText("choseLevel");
+        lavelLabel.setText("choseLevel");
 
-        jLabel5.setText("Sudoku");
+        RoundMessageLabel.setText("Round:");
 
-        jLabel6.setText("Round:");
+        numberRoundLabel.setText("roundNo");
 
-        jLabel7.setText("roundNumber");
+        sudokuPanel.setPreferredSize(new java.awt.Dimension(241, 241));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {},
-            new String [] {}
-        )
-    );
-    jTable1.setColumnSelectionAllowed(true);
-    jTable1.getTableHeader().setReorderingAllowed(false);
-
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(
-        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(19, 19, 19)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabel4))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 265, Short.MAX_VALUE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(185, 185, 185)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jTable1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE))))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(55, 55, 55)
-            .addComponent(jLabel7)
-            .addGap(17, 17, 17))
-    );
-    layout.setVerticalGroup(
-        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addGap(7, 7, 7)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jLabel1)
-                .addComponent(jLabel2)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabel6)
-                .addComponent(jLabel7))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jLabel3)
-                .addComponent(jLabel4))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
-                .addComponent(jTable1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(100, Short.MAX_VALUE))
-    );
-
-    jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
-    pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+        sudokuTable.setAutoCreateRowSorter(true);
+        sudokuTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "A", "B", "C", "D", "E", "F", "G", "H", "I"
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GameplayFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GameplayFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GameplayFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GameplayFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
+            };
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GameplayFrame().setVisible(true);
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
             }
         });
-    }
+        sudokuTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        sudokuTable.setAutoscrolls(false);
+        sudokuTable.setEditingRow(1);
+        sudokuTable.setFocusable(false);
+        sudokuTable.setPreferredSize(new java.awt.Dimension(603, 603));
+        sudokuTable.setRequestFocusEnabled(false);
+        sudokuTable.setRowHeight(67);
+        sudokuTable.setShowGrid(true);
+        sudokuTable.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                sudokuTableAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        sudokuPanel.setViewportView(sudokuTable);
+        if (sudokuTable.getColumnModel().getColumnCount() > 0) {
+            sudokuTable.getColumnModel().getColumn(0).setResizable(false);
+            sudokuTable.getColumnModel().getColumn(1).setResizable(false);
+            sudokuTable.getColumnModel().getColumn(2).setResizable(false);
+            sudokuTable.getColumnModel().getColumn(3).setResizable(false);
+            sudokuTable.getColumnModel().getColumn(4).setResizable(false);
+            sudokuTable.getColumnModel().getColumn(5).setResizable(false);
+            sudokuTable.getColumnModel().getColumn(6).setResizable(false);
+            sudokuTable.getColumnModel().getColumn(7).setResizable(false);
+            sudokuTable.getColumnModel().getColumn(8).setResizable(false);
+        }
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(nameMessageLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(nameLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                        .addComponent(RoundMessageLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(numberRoundLabel)
+                        .addGap(5, 5, 5))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(levelMessageLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lavelLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(sudokuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameMessageLabel)
+                    .addComponent(nameLabel)
+                    .addComponent(RoundMessageLabel)
+                    .addComponent(numberRoundLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(levelMessageLabel)
+                    .addComponent(lavelLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sudokuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void sudokuTableAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_sudokuTableAncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sudokuTableAncestorAdded
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable<int> jTable1;
+    private javax.swing.JLabel RoundMessageLabel;
+    private javax.swing.JLabel lavelLabel;
+    private javax.swing.JLabel levelMessageLabel;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JLabel nameMessageLabel;
+    private javax.swing.JLabel numberRoundLabel;
+    private javax.swing.JScrollPane sudokuPanel;
+    private javax.swing.JTable sudokuTable;
     // End of variables declaration//GEN-END:variables
 }

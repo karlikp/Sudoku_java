@@ -1,9 +1,5 @@
 package View;
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -34,14 +30,9 @@ public class InitFrame extends javax.swing.JFrame {
         enterButton1 = new javax.swing.JButton();
         jLabelName = new javax.swing.JLabel();
         userName = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        levelComboBox = new javax.swing.JComboBox<>();
+        jLabelMessageLevel = new javax.swing.JLabel();
+        choseLevelComboBox = new javax.swing.JComboBox<>();
         enterButton = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        finalName = new javax.swing.JLabel();
-        finalDifficultyLevel = new javax.swing.JLabel();
-        enterButton2 = new javax.swing.JButton();
 
         enterButton1.setMnemonic('E');
         enterButton1.setText("Enter");
@@ -59,13 +50,13 @@ public class InitFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Check difficulty level:");
+        jLabelMessageLevel.setText("Check difficulty level:");
 
-        levelComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Easy", "Medium", "Hard", " " }));
-        levelComboBox.setToolTipText("");
-        levelComboBox.addActionListener(new java.awt.event.ActionListener() {
+        choseLevelComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Easy", "Medium", "Hard", " " }));
+        choseLevelComboBox.setToolTipText("");
+        choseLevelComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                levelComboBoxActionPerformed(evt);
+                choseLevelComboBoxActionPerformed(evt);
             }
         });
 
@@ -78,23 +69,6 @@ public class InitFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Name:");
-
-        jLabel3.setText("Difficulty level:");
-
-        finalName.setText("finalName");
-
-        finalDifficultyLevel.setText("finalDifficultyLevel");
-
-        enterButton2.setMnemonic('E');
-        enterButton2.setText("Enter");
-        enterButton2.setToolTipText("Set your choice");
-        enterButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                enterButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -102,34 +76,17 @@ public class InitFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(51, 51, 51)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(userName, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(levelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(finalName, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(finalDifficultyLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(74, 74, 74))))
-            .addGroup(layout.createSequentialGroup()
+                    .addComponent(jLabelMessageLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(139, 139, 139)
-                        .addComponent(enterButton2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(145, 145, 145)
-                        .addComponent(enterButton)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(userName, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(choseLevelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(145, 145, 145)
+                .addComponent(enterButton)
+                .addGap(0, 160, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,21 +97,11 @@ public class InitFrame extends javax.swing.JFrame {
                     .addComponent(userName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(levelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabelMessageLevel)
+                    .addComponent(choseLevelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(enterButton)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(finalName))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(finalDifficultyLevel))
-                .addGap(38, 38, 38)
-                .addComponent(enterButton2)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         pack();
@@ -164,21 +111,28 @@ public class InitFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_userNameActionPerformed
 
-    private void levelComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_levelComboBoxActionPerformed
+    private void choseLevelComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_choseLevelComboBoxActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_levelComboBoxActionPerformed
+    }//GEN-LAST:event_choseLevelComboBoxActionPerformed
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
-        // TODO add your handling code here:
-        String name = userName.getText();
-        String level = (String)levelComboBox.getSelectedItem();
-        finalName.setText(name);
-        finalDifficultyLevel.setText(level);
+        
+    // Get the user input from text field and combo box
+    name = userName.getText();  // Get user name from text field
+    difficultyLevel = (String) choseLevelComboBox.getSelectedItem();  // Get selected difficulty level
+    
+    // Validate inputs
+    if (name.isEmpty()) {
+        new MessageFrame( "Please enter your name.");
+    } else {
+        // If inputs are valid, open the GameplayFrame
+        GameplayFrame gameplayFrame = new GameplayFrame(name, difficultyLevel);  // Pass name and level to GameplayFrame
+        gameplayFrame.setVisible(true);  // Display the GameplayFrame
+        this.dispose();  // Close the InitFrame (optional, based on your flow)
+    }
+       
+        
     }//GEN-LAST:event_enterButtonActionPerformed
-
-    private void enterButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_enterButton2ActionPerformed
 
     
     public String downloadName() {
@@ -226,16 +180,11 @@ public class InitFrame extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> choseLevelComboBox;
     private javax.swing.JButton enterButton;
     private javax.swing.JButton enterButton1;
-    private javax.swing.JButton enterButton2;
-    private javax.swing.JLabel finalDifficultyLevel;
-    private javax.swing.JLabel finalName;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabelMessageLevel;
     private javax.swing.JLabel jLabelName;
-    private javax.swing.JComboBox<String> levelComboBox;
     private javax.swing.JTextField userName;
     // End of variables declaration//GEN-END:variables
 }
