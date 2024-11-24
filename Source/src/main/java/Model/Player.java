@@ -1,5 +1,7 @@
 package Model;
 
+import Controller.InvalidDifficultyLevelException;
+
 /**
  * Represents a player in the game, containing a name and difficulty level.
  * <p>

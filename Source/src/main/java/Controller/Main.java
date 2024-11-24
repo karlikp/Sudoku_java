@@ -3,6 +3,7 @@ package Controller;
 import Model.*;
 import View.*;
 
+
 /**
  * The main entry point for the game application, responsible for initializing
  * the MVC components and starting the game.
@@ -29,19 +30,27 @@ public class Main {
      *  - second argument is used to set difficulty level
      */
     public static void main(String[] args) {
-        // Creating model (Player), view (GameView) and controller (GameController)
-        Player model = new Player("", "");  
-        InitFrame view = new InitFrame();     
-        GameController controller = new GameController(model, view);  
-
-        // Starting game
-        controller.GameInit(args);  // Controller manage interaction between model and view
+        // Create the model instances
+        String placeholderName = "Default Name";  // Placeholder name
+        String placeholderDifficulty = "Easy";  // Default difficulty (can be changed later)
         
-        java.awt.EventQueue.invokeLater(new Runnable() { //java.awt - package: Abstract Window Toolkit
-            public void run() {                          //EventQueue - class, invokeLaer - method
-                new InitFrame().setVisible(true);
-                
-            }
-        });
+        Player playerModel = new Player(placeholderName, placeholderDifficulty);  // Create Player with placeholder values
+        SudokuModel sudokuModel = new SudokuModel();  // Pass the playerModel to SudokuModel
+
+        // Create the view instances
+        InitFrame initView = new InitFrame();  // Create the InitFrame view
+        GameplayFrame gameplayView = new GameplayFrame();  // Create the GameplayFrame view
+
+        // Create the controller instance
+        GameController controller = new GameController(playerModel, initView, sudokuModel, gameplayView);
+        
+        // Pass the controller to the InitFrame using the setter
+        System.out.println("Kontroler przed przypisaniem: " + controller);
+        initView.setController(controller);  // Set the controller after the InitFrame is created
+        System.out.println("Kontroler po przypisaniu: " + initView.getController());
+        gameplayView.setController(controller);
+        // Make the InitFrame visible
+        initView.setVisible(true);  // Show the InitFrame to start the process
     }
+
 }

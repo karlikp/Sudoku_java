@@ -1,5 +1,4 @@
-
-package Model;
+package Controller;
 
 /**
  * Exception thrown when an invalid difficulty level is set for a Player.

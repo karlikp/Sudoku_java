@@ -1,5 +1,8 @@
 package View;
-import javax.swing.JOptionPane;
+import Controller.*;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -9,9 +12,10 @@ public class InitFrame extends javax.swing.JFrame {
     
     private String name;
     private String difficultyLevel;
+    private GameController controller;
 
-    /**
-     * Creates new form SudokuFrame
+      /**
+     * Creates new form InitFrame
      */
     public InitFrame() {
         initComponents();
@@ -116,25 +120,30 @@ public class InitFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_choseLevelComboBoxActionPerformed
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
-        
-    // Get the user input from text field and combo box
-    name = userName.getText();  // Get user name from text field
-    difficultyLevel = (String) choseLevelComboBox.getSelectedItem();  // Get selected difficulty level
+                                                  
+        // Get the user input from text field and combo box
+        name = userName.getText();  // Get user name from text field
+        difficultyLevel = (String) choseLevelComboBox.getSelectedItem();  // Get selected difficulty level
     
-    // Validate inputs
-    if (name.isEmpty()) {
-        new MessageFrame( "Please enter your name.");
-    } else {
-        // If inputs are valid, open the GameplayFrame
-        GameplayFrame gameplayFrame = new GameplayFrame(name, difficultyLevel);  // Pass name and level to GameplayFrame
-        gameplayFrame.setVisible(true);  // Display the GameplayFrame
-        this.dispose();  // Close the InitFrame (optional, based on your flow)
-    }
-       
-        
+        // Validate inputs and notify via controller
+        if (name.isEmpty()) {
+            new MessageFrame("Please enter your name.");
+        } else if (difficultyLevel == null || difficultyLevel.trim().isEmpty()) {
+            new MessageFrame("Please select a difficulty level.");
+        } else {
+            try {
+                // If inputs are valid, delegate the start to the controller
+                controller.startGame(name, difficultyLevel);
+            } catch (InvalidDifficultyLevelException ex) {
+                Logger.getLogger(InitFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.dispose();  // Close the InitFrame (optional, based on your flow)
+        }
+    
     }//GEN-LAST:event_enterButtonActionPerformed
 
     
+// Getters for the inputs, to be used by the controller
     public String downloadName() {
         return name;
     }
@@ -143,41 +152,16 @@ public class InitFrame extends javax.swing.JFrame {
         return difficultyLevel;
     }
     
+    // Setter for the controller
+    public void setController(GameController controller) {
+        this.controller = controller;
+    }
     
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(SudokuFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(SudokuFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(SudokuFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(SudokuFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new SudokuFrame().setVisible(true);
-//            }
-//        });
-//    }
+    public  GameController getController() {
+        return this.controller;
+    }
+    
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> choseLevelComboBox;

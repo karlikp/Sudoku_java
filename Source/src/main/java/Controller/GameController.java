@@ -5,6 +5,7 @@ import View.*;
 
 
 
+
 /**
  * The GameController class is responsible for managing the game logic and
  * coordinating interactions between the Model (`Player`) and the View (`GameView`).
@@ -19,21 +20,48 @@ import View.*;
 public class GameController {
     
     /** The model representing the player data. */
-    final private Player model;
+    final private Player playerModel;
+    private SudokuModel sudokuModel;
+    private MessageFrame messageView;
     
     /** The view for interacting with the user. */
-    final private InitFrame view;
+    final private InitFrame initView;
+    private GameplayFrame gameplayView;
 
     /**
      * Constructs a new GameController with the specified model and view.
      *
-     * @param model the Player model containing player data
+     * @param playerModel the Player model containing player data
      * @param view the GameView instance for user interaction
      */
-    public GameController(Player model, InitFrame view) {
-        this.model = model;
-        this.view = view;
+    public GameController(Player playerModel, InitFrame initView, 
+            SudokuModel sudokuModel, GameplayFrame gameplayView) {
+        
+        this.playerModel = playerModel;
+        this.sudokuModel = sudokuModel;
+        this.initView = initView;
+        this.gameplayView = gameplayView;
+        
     }
+    
+    public void handleUserMove(int row, int col, int num) {
+        
+        System.out.println("Attempting to make a move: ");
+        System.out.println("Row: " + row + ", Column: " + col + ", Number: " + num);
+        try {
+            boolean validMove = sudokuModel.makeMove(row, col, num);
+            if (validMove) {
+                gameplayView.updateBoard(sudokuModel.getBoard());
+            } else {
+                new MessageFrame("Invalid move.");
+            }
+        } catch (SudokuModel.InvalidMoveException ex) {
+            new MessageFrame(ex.getMessage());
+        }
+    }
+    
+    
+
     
     /**
      * Checks if the provided difficulty level argument can be converted to an integer.
@@ -78,8 +106,8 @@ public class GameController {
         }
         else{
         // Retrieve input from the view if command-line arguments are missing    
-        name = view.downloadName();
-        tempLevel = view.downloadDifficultyLevel();
+        name = initView.downloadName();
+        tempLevel = initView.downloadDifficultyLevel();
         level = checkExceptionForLevel(tempLevel);
         }
         // Determine difficulty level as a string based on the integer input
@@ -96,24 +124,50 @@ public class GameController {
                 break;
             default:
                 difficultyLevel = "Easy";
-                System.out.println("Wrong choice. Set default difficulty level: Easy.");
+                new MessageFrame("Wrong choice. Set default difficulty level: Easy.");
         }
 
         // Set model data
-        model.setName(name);
+        playerModel.setName(name);
         
         try {
-            model.setDifficultyLevel(difficultyLevel); // May throw InvalidDifficultyLevelException
+            playerModel.setDifficultyLevel(difficultyLevel); // May throw InvalidDifficultyLevelException
         } catch (InvalidDifficultyLevelException e) {
-            System.out.println("Error: " + e.getMessage());
+            new MessageFrame("Error: " + e.getMessage());
             try {
-                model.setDifficultyLevel("Easy"); // Set default level in case of error
+                playerModel.setDifficultyLevel("Easy"); // Set default level in case of error
             } catch (InvalidDifficultyLevelException ex) {
-                 System.out.println("Unexpected error: " + ex.getMessage());
+                 new MessageFrame("Unexpected error: " + ex.getMessage());
             }
         }
-
-        // Show gretting
-        //view.showGreeting(model.getName(), model.getDifficultyLevel());
     }
+    
+     // This method is called by InitFrame to start the game
+    public void startGame(String playerName, String difficulty) throws InvalidDifficultyLevelException {
+        playerModel.setName(playerName);
+        playerModel.setDifficultyLevel(difficulty);
+               
+        
+        // Initialize gameplay frame and pass the controller
+        gameplayView = new GameplayFrame();
+        gameplayView.setVisible(true); // Show gameplay view
+        
+        // Optionally, dispose of InitFrame if it was passed from the main application.
+        // initView.dispose();
+    }
+    public String getName(){
+        return playerModel.getName();
+    }
+    
+    public String getLevel(){
+        return playerModel.getDifficultyLevel();
+    }
+    /**
+     *
+     * @param row
+     * @param col
+     * @param num
+     */
+    
+    
 }

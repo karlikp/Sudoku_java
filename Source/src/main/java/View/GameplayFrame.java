@@ -1,126 +1,133 @@
 package View;
 
 
-import java.awt.Color;
+
+import Controller.GameController;
 import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.*;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 /**
  *
  * @author Karol
  */
+
+
 public class GameplayFrame extends javax.swing.JFrame {
+    
+    private GameController controller;
+
 
     /**
      * Creates new form GameplayFrame
-     * @param userName
-     * @param difficultyLevel
      */
     // Constructor to initialize the frame
-    public GameplayFrame(String userName, String difficultyLevel) {
+        public GameplayFrame() {
         initComponents();
-        setLocationRelativeTo(null); // This will center the frame on the screen
-        nameLabel.setText(userName);  // Display user name
-        lavelLabel.setText(difficultyLevel);  // Display difficulty level
+        setupSudokuTable();
+        setLocationRelativeTo(null);
+        setTitle("Sudoku");
         setupSudokuTable();  // Set up the Sudoku grid
-        
-        
-    }
-    
+}
    
-    
+        
 // Method to initialize the Sudoku table
 private void setupSudokuTable() {
     
-     String[] columnHeaders = {"A", "B", "C", "D", "E", "F", "G", "H", "I"};
+    nameLabel.setText(controller.getName());
+    levelLabel.setText(controller.getLevel());
     // Set a 9x9 grid for Sudoku
     DefaultTableModel model = new DefaultTableModel(9, 9) {
         @Override
-        public boolean isCellEditable(int row, int column) {
-            return true; // Allow editing for user input
+    public Class<?> getColumnClass(int columnIndex) {
+        return Integer.class; // Only integers allowed
         }
     };
-    model.setColumnIdentifiers(columnHeaders); // Set column headers
-    sudokuTable.setModel(model);
-    sudokuTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+    
+    
    
-     String[] rowHeaders = {"a", "b", "c", "d", "e", "f", "g", "h", "i"};
-     
-     JTable rowHeaderTable = new JTable(new DefaultTableModel(rowHeaders.length, 1)) {
+    sudokuTable.setModel(model);
+ 
+        // Identyfikatory wierszy
+    String[] rowHeaders = {"a", "b", "c", "d", "e", "f", "g", "h", "i"};
+
+    // Tworzenie rowHeaderTable
+    JTable rowHeaderTable = new JTable(new DefaultTableModel(rowHeaders.length, 1)) {
         @Override
         public boolean isCellEditable(int row, int column) {
-            return false; // Row headers should not be editable
+            return false; // Nagłówki nieedytowalne
         }
     };
-     
-         // Populate row header table with row titles
+
+    // Wypełnianie rowHeaderTable nazwami wierszy
     for (int i = 0; i < rowHeaders.length; i++) {
         rowHeaderTable.setValueAt(rowHeaders[i], i, 0);
     }
-     // Set row header properties
-    rowHeaderTable.setRowHeight(67); // Match the row height of the Sudoku table
-    rowHeaderTable.setPreferredScrollableViewportSize(new Dimension(20, sudokuTable.getHeight()));
+
+    // Ustawienia wizualne rowHeaderTable
+    rowHeaderTable.setRowHeight(67); // Dopasowanie wysokości wierszy
+    rowHeaderTable.setPreferredScrollableViewportSize(new Dimension(30, sudokuTable.getHeight()));
     rowHeaderTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             JLabel label = new JLabel(String.valueOf(value), JLabel.CENTER);
             label.setFont(sudokuTable.getFont());
             label.setOpaque(true);
-            //label.setBackground(Color.LIGHT_GRAY); // Background for row headers
             return label;
         }
     });
-    
 
-    // Apply a custom renderer for bold grid lines
-    sudokuTable.setDefaultRenderer(Object.class, new SudokuCellRenderer());
+    // Dodanie rowHeaderTable do sudokuPanel jako widok boczny
     sudokuPanel.setRowHeaderView(rowHeaderTable);
+
+    // Środkowanie wartości w sudokuTable
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+    sudokuTable.setDefaultRenderer(Object.class, centerRenderer);
     
- 
+    // Dodanie nasłuchiwacza na zmiany w modelu tabeli
+    sudokuTable.getModel().addTableModelListener(e -> {
+                int row = e.getFirstRow();
+                int col = e.getColumn();
+                Object value = sudokuTable.getValueAt(row, col);
+
+                if (value != null) {
+                    try {
+                        int num = Integer.parseInt(value.toString());
+                        if (num >= 1 && num <= 9) {
+                            if (controller != null) {
+                                controller.handleUserMove(row, col, num);
+                            } else {
+                                System.out.println("Kontroler nie został przypisany.");
 }
-
-// Custom Renderer for Sudoku cells
-class SudokuCellRenderer extends DefaultTableCellRenderer {
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        // Get the default cell renderer
-        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-        // Ensure the cell is a JComponent for styling
-        if (c instanceof JComponent) {
-            JComponent jc = (JComponent) c;
-
-            // Apply borders for bold lines in 3x3 sub-grids
-            int top = (row == 3 || row == 6) ? 3 : 1; // Bold lines between row 3-4 and 6-7
-            int left = (column == 3 || column == 6) ? 3 : 1; // Bold lines between column 3-4 and 6-7
-            int bottom = 1;
-            int right = 1;
-
-            // Set the border for the cell
-            jc.setBorder(BorderFactory.createMatteBorder(top, left, bottom, right, Color.BLACK));
+                        } else {
+                             new MessageFrame("Invalid input. Only numbers between 1 and 9 are allowed.");
+                        }
+                    } catch (NumberFormatException ex) {
+                         new MessageFrame("Invalid input. Please enter a valid number.");
+                    }
+                }
+            });
         }
 
-        // Set background and foreground colors
-        if ((row / 3 + column / 3) % 2 == 0) {
-            c.setBackground(Color.LIGHT_GRAY); // Alternating 3x3 sub-grid background color
-        } else {
-            c.setBackground(Color.WHITE);
+     public void updateBoard(int[][] board) {
+        // Update the table based on the new state of the Sudoku board
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                sudokuTable.setValueAt(board[i][j], i, j);
+            }
         }
-        c.setForeground(Color.BLACK);
-
-        return c;
     }
-}
+     
+     // Setter for the controller
+    public void setController(GameController controller) {
+        this.controller = controller;
+    }
+    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -133,7 +140,7 @@ class SudokuCellRenderer extends DefaultTableCellRenderer {
         nameMessageLabel = new javax.swing.JLabel();
         nameLabel = new javax.swing.JLabel();
         levelMessageLabel = new javax.swing.JLabel();
-        lavelLabel = new javax.swing.JLabel();
+        levelLabel = new javax.swing.JLabel();
         RoundMessageLabel = new javax.swing.JLabel();
         numberRoundLabel = new javax.swing.JLabel();
         sudokuPanel = new javax.swing.JScrollPane();
@@ -147,7 +154,7 @@ class SudokuCellRenderer extends DefaultTableCellRenderer {
 
         levelMessageLabel.setText("Level:");
 
-        lavelLabel.setText("choseLevel");
+        levelLabel.setText("choseLevel");
 
         RoundMessageLabel.setText("Round:");
 
@@ -188,15 +195,6 @@ class SudokuCellRenderer extends DefaultTableCellRenderer {
         sudokuTable.setRequestFocusEnabled(false);
         sudokuTable.setRowHeight(67);
         sudokuTable.setShowGrid(true);
-        sudokuTable.addAncestorListener(new javax.swing.event.AncestorListener() {
-            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-                sudokuTableAncestorAdded(evt);
-            }
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-            }
-            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
-            }
-        });
         sudokuPanel.setViewportView(sudokuTable);
         if (sudokuTable.getColumnModel().getColumnCount() > 0) {
             sudokuTable.getColumnModel().getColumn(0).setResizable(false);
@@ -229,12 +227,12 @@ class SudokuCellRenderer extends DefaultTableCellRenderer {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(levelMessageLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lavelLabel)
+                        .addComponent(levelLabel)
                         .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(30, 30, 30)
                 .addComponent(sudokuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,7 +246,7 @@ class SudokuCellRenderer extends DefaultTableCellRenderer {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(levelMessageLabel)
-                    .addComponent(lavelLabel))
+                    .addComponent(levelLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sudokuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -257,13 +255,9 @@ class SudokuCellRenderer extends DefaultTableCellRenderer {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void sudokuTableAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_sudokuTableAncestorAdded
-        // TODO add your handling code here:
-    }//GEN-LAST:event_sudokuTableAncestorAdded
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel RoundMessageLabel;
-    private javax.swing.JLabel lavelLabel;
+    private javax.swing.JLabel levelLabel;
     private javax.swing.JLabel levelMessageLabel;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JLabel nameMessageLabel;
