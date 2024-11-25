@@ -17,6 +17,9 @@ public class GameplayFrame extends javax.swing.JFrame {
     /**
  * The panel where the Sudoku grid will be displayed.
  */
+    
+    private Model.ButtonModel buttonModel;
+    
     private javax.swing.JPanel sudokuGridPanel;
 
    /**
@@ -41,32 +44,29 @@ public class GameplayFrame extends javax.swing.JFrame {
      * Sets up the 9x9 Sudoku grid with interactive buttons.
      */
    private void setupSudokuGrid() {
-    // Create a 9x9 array of buttons
+    buttonModel = new Model.ButtonModel(); // Inicjalizacja modelu
     JButton[][] buttons = new JButton[9][9];
-    
+
     for (int row = 0; row < 9; row++) {
         for (int col = 0; col < 9; col++) {
             JButton button = new JButton("");
             button.setPreferredSize(new Dimension(67, 67));
             button.setFont(new java.awt.Font("Arial", java.awt.Font.PLAIN, 20));
-            
-             // Set background color based on position for distinct 3x3 regions
+
+            // Ustawienia wizualne
             if ((row >= 3 && row <= 5) || (col >= 3 && col <= 5)) {
-                button.setBackground(new Color(211, 211, 211)); // Light gray color
+                button.setBackground(new Color(211, 211, 211));
             } else {
-                button.setBackground(Color.WHITE); // White for other cells
+                button.setBackground(Color.WHITE);
             }
-            
             button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            
-            // Generate a unique ID based on the grid position (row * 9 + col)
+
+            // Generowanie unikalnego ID
             int id = row * 9 + col;
-            button.setName("cell_" + id); 
-            
-            // Add tooltip for user interaction
+            button.setName("cell_" + id);
             button.setToolTipText("Click to enter number");
 
-            // Add an action listener to handle button clicks
+            // Akcja przycisku
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -78,13 +78,15 @@ public class GameplayFrame extends javax.swing.JFrame {
                     }
                 }
             });
-            
+
+            // Dodanie przycisku do modelu
+            buttonModel.addButton(id, button);
+
+            // Dodanie przycisku do panelu
             buttons[row][col] = button;
-            sudokuGridPanel.add(button); 
+            sudokuGridPanel.add(button);
         }
     }
-    
-    // Add the grid panel to the scrollable panel
     sudokuPanel.setViewportView(sudokuGridPanel);
 }
 

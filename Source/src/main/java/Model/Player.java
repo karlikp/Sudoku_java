@@ -1,5 +1,10 @@
 package Model;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
+
 /**
  * Represents a player in the game, containing a name and difficulty level.
  * <p>
@@ -10,6 +15,10 @@ package Model;
  * @version 1.0
  */
 
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString
 
 public class Player {
     
@@ -19,6 +28,7 @@ public class Player {
     /** The difficulty level chosen by the player. */
     private String difficultyLevel;
 
+    private PlayerRecord playerData;
     /**
      * Constructs a new Player with the specified name and difficulty level.
      *
@@ -28,7 +38,10 @@ public class Player {
     public Player(String name, String difficultyLevel) {
         this.name = name;
         this.difficultyLevel = difficultyLevel;
+        this.playerData = new PlayerRecord(name, difficultyLevel);
     }
+    
+    
 
     /**
      * Gets the player's name.
@@ -36,7 +49,7 @@ public class Player {
      * @return the name of the player
      */
     public String getName() {
-        return name;
+        return playerData.name();
     }
 
     /**
