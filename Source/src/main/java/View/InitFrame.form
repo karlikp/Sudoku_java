@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
-  <NonVisualComponents>
-    <Component class="javax.swing.JButton" name="enterButton1">
-      <Properties>
-        <Property name="mnemonic" type="int" value="69"/>
-        <Property name="text" type="java.lang.String" value="Enter"/>
-        <Property name="toolTipText" type="java.lang.String" value="Set your choice"/>
-      </Properties>
-    </Component>
-  </NonVisualComponents>
+<Form version="1.4" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
     <Property name="resizable" type="boolean" value="false"/>
@@ -78,19 +69,25 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Type in your name: "/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_DeclarationPre" type="java.lang.String" value="/**&#xa; * Label to display the message &quot;Name:&quot; or related information.&#xa; * This label shows the &quot;Name&quot; prompt before the user enters their name.&#xa; */"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="userName">
       <Properties>
         <Property name="text" type="java.lang.String" value="userName"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="userNameActionPerformed"/>
-      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_DeclarationPre" type="java.lang.String" value="/**&#xa; * Text field for user input to enter their name.&#xa; * This text field captures the player&apos;s name, which will be displayed in the gameplay window.&#xa; */"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelMessageLevel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Check difficulty level:"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_DeclarationPre" type="java.lang.String" value="/**&#xa; * Label to display the message &quot;Level:&quot; or related information.&#xa; * This label is used for displaying the level message next to the selected difficulty combo box.&#xa; */"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JComboBox" name="choseLevelComboBox">
       <Properties>
@@ -104,10 +101,8 @@
         </Property>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="choseLevelComboBoxActionPerformed"/>
-      </Events>
       <AuxValues>
+        <AuxValue name="JavaCodeGenerator_DeclarationPre" type="java.lang.String" value="// Variables declaration - do not modify&#xa;/**&#xa; * JComboBox for selecting the difficulty level of the game.&#xa; * This combo box allows the user to choose the level of difficulty before starting the game.&#xa; */"/>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
     </Component>
@@ -120,6 +115,9 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="enterButtonActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_DeclarationPre" type="java.lang.String" value="/**&#xa; * Button to submit the selected difficulty level and user name.&#xa; * When clicked, this button proceeds to the gameplay screen.&#xa; */"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

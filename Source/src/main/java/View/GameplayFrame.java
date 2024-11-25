@@ -1,132 +1,93 @@
 package View;
 
-
-
-import Controller.GameController;
-import java.awt.Component;
-import java.awt.Dimension;
 import javax.swing.*;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.BorderFactory;
+import java.awt.*;
+import java.awt.event.*;
+
 
 /**
- *
+ * GameplayFrame class represents the main game window for the Sudoku application.
+ * It displays the Sudoku grid, user name, and selected difficulty level.
+ * 
  * @author Karol
  */
-
-
 public class GameplayFrame extends javax.swing.JFrame {
     
-    private GameController controller;
-
-
     /**
-     * Creates new form GameplayFrame
+ * The panel where the Sudoku grid will be displayed.
+ */
+    private javax.swing.JPanel sudokuGridPanel;
+
+   /**
+     * Creates a new GameplayFrame window.
+     * 
+     * @param userName         the name of the user
+     * @param difficultyLevel  the difficulty level of the game
      */
-    // Constructor to initialize the frame
-        public GameplayFrame() {
+    public GameplayFrame(String userName, String difficultyLevel) {
         initComponents();
-        setupSudokuTable();
-        setLocationRelativeTo(null);
-        setTitle("Sudoku");
-        setupSudokuTable();  // Set up the Sudoku grid
-}
-   
+        setLocationRelativeTo(null); // This will center the frame on the screen
+        nameLabel.setText(userName);  // Display user name
+        lavelLabel.setText(difficultyLevel);  // Display difficulty level
         
-// Method to initialize the Sudoku table
-private void setupSudokuTable() {
-    
-    nameLabel.setText(controller.getName());
-    levelLabel.setText(controller.getLevel());
-    // Set a 9x9 grid for Sudoku
-    DefaultTableModel model = new DefaultTableModel(9, 9) {
-        @Override
-    public Class<?> getColumnClass(int columnIndex) {
-        return Integer.class; // Only integers allowed
+        sudokuGridPanel = new javax.swing.JPanel();
+        sudokuGridPanel.setLayout(new java.awt.GridLayout(9, 9));
+        
+        setupSudokuGrid();
         }
-    };
     
+ /**
+     * Sets up the 9x9 Sudoku grid with interactive buttons.
+     */
+   private void setupSudokuGrid() {
+    // Create a 9x9 array of buttons
+    JButton[][] buttons = new JButton[9][9];
     
-   
-    sudokuTable.setModel(model);
- 
-        // Identyfikatory wierszy
-    String[] rowHeaders = {"a", "b", "c", "d", "e", "f", "g", "h", "i"};
+    for (int row = 0; row < 9; row++) {
+        for (int col = 0; col < 9; col++) {
+            JButton button = new JButton("");
+            button.setPreferredSize(new Dimension(67, 67));
+            button.setFont(new java.awt.Font("Arial", java.awt.Font.PLAIN, 20));
+            
+             // Set background color based on position for distinct 3x3 regions
+            if ((row >= 3 && row <= 5) || (col >= 3 && col <= 5)) {
+                button.setBackground(new Color(211, 211, 211)); // Light gray color
+            } else {
+                button.setBackground(Color.WHITE); // White for other cells
+            }
+            
+            button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            
+            // Generate a unique ID based on the grid position (row * 9 + col)
+            int id = row * 9 + col;
+            button.setName("cell_" + id); 
+            
+            // Add tooltip for user interaction
+            button.setToolTipText("Click to enter number");
 
-    // Tworzenie rowHeaderTable
-    JTable rowHeaderTable = new JTable(new DefaultTableModel(rowHeaders.length, 1)) {
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false; // Nagłówki nieedytowalne
-        }
-    };
-
-    // Wypełnianie rowHeaderTable nazwami wierszy
-    for (int i = 0; i < rowHeaders.length; i++) {
-        rowHeaderTable.setValueAt(rowHeaders[i], i, 0);
-    }
-
-    // Ustawienia wizualne rowHeaderTable
-    rowHeaderTable.setRowHeight(67); // Dopasowanie wysokości wierszy
-    rowHeaderTable.setPreferredScrollableViewportSize(new Dimension(30, sudokuTable.getHeight()));
-    rowHeaderTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            JLabel label = new JLabel(String.valueOf(value), JLabel.CENTER);
-            label.setFont(sudokuTable.getFont());
-            label.setOpaque(true);
-            return label;
-        }
-    });
-
-    // Dodanie rowHeaderTable do sudokuPanel jako widok boczny
-    sudokuPanel.setRowHeaderView(rowHeaderTable);
-
-    // Środkowanie wartości w sudokuTable
-    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-    centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-    sudokuTable.setDefaultRenderer(Object.class, centerRenderer);
-    
-    // Dodanie nasłuchiwacza na zmiany w modelu tabeli
-    sudokuTable.getModel().addTableModelListener(e -> {
-                int row = e.getFirstRow();
-                int col = e.getColumn();
-                Object value = sudokuTable.getValueAt(row, col);
-
-                if (value != null) {
-                    try {
-                        int num = Integer.parseInt(value.toString());
-                        if (num >= 1 && num <= 9) {
-                            if (controller != null) {
-                                controller.handleUserMove(row, col, num);
-                            } else {
-                                System.out.println("Kontroler nie został przypisany.");
-}
-                        } else {
-                             new MessageFrame("Invalid input. Only numbers between 1 and 9 are allowed.");
-                        }
-                    } catch (NumberFormatException ex) {
-                         new MessageFrame("Invalid input. Please enter a valid number.");
+            // Add an action listener to handle button clicks
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String input = JOptionPane.showInputDialog("Enter a number (1-9):");
+                    if (input != null && input.matches("[1-9]")) {
+                        button.setText(input);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid input! Please enter a number between 1 and 9.");
                     }
                 }
             });
+            
+            buttons[row][col] = button;
+            sudokuGridPanel.add(button); 
         }
-
-     public void updateBoard(int[][] board) {
-        // Update the table based on the new state of the Sudoku board
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                sudokuTable.setValueAt(board[i][j], i, j);
-            }
-        }
-    }
-     
-     // Setter for the controller
-    public void setController(GameController controller) {
-        this.controller = controller;
     }
     
+    // Add the grid panel to the scrollable panel
+    sudokuPanel.setViewportView(sudokuGridPanel);
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -140,11 +101,10 @@ private void setupSudokuTable() {
         nameMessageLabel = new javax.swing.JLabel();
         nameLabel = new javax.swing.JLabel();
         levelMessageLabel = new javax.swing.JLabel();
-        levelLabel = new javax.swing.JLabel();
-        RoundMessageLabel = new javax.swing.JLabel();
-        numberRoundLabel = new javax.swing.JLabel();
+        lavelLabel = new javax.swing.JLabel();
         sudokuPanel = new javax.swing.JScrollPane();
         sudokuTable = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -154,15 +114,12 @@ private void setupSudokuTable() {
 
         levelMessageLabel.setText("Level:");
 
-        levelLabel.setText("choseLevel");
+        lavelLabel.setText("choseLevel");
 
-        RoundMessageLabel.setText("Round:");
+        sudokuPanel.setColumnHeaderView(sudokuTable);
+        sudokuPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        sudokuPanel.setPreferredSize(new java.awt.Dimension(221, 221));
 
-        numberRoundLabel.setText("roundNo");
-
-        sudokuPanel.setPreferredSize(new java.awt.Dimension(241, 241));
-
-        sudokuTable.setAutoCreateRowSorter(true);
         sudokuTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null},
@@ -187,9 +144,9 @@ private void setupSudokuTable() {
                 return types [columnIndex];
             }
         });
+        sudokuTable.setToolTipText("");
         sudokuTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         sudokuTable.setAutoscrolls(false);
-        sudokuTable.setEditingRow(1);
         sudokuTable.setFocusable(false);
         sudokuTable.setPreferredSize(new java.awt.Dimension(603, 603));
         sudokuTable.setRequestFocusEnabled(false);
@@ -208,61 +165,97 @@ private void setupSudokuTable() {
             sudokuTable.getColumnModel().getColumn(8).setResizable(false);
         }
 
+        jButton1.setMnemonic('b');
+        jButton1.setText("Back");
+        jButton1.setToolTipText("Clik to change name or level");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(16, 16, 16)
+                .addContainerGap()
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(nameMessageLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(nameLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
-                        .addComponent(RoundMessageLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(numberRoundLabel)
-                        .addGap(5, 5, 5))
+                        .addComponent(nameLabel))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(levelMessageLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(levelLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(lavelLabel)))
+                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(39, 39, 39)
                 .addComponent(sudokuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameMessageLabel)
-                    .addComponent(nameLabel)
-                    .addComponent(RoundMessageLabel)
-                    .addComponent(numberRoundLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(levelMessageLabel)
-                    .addComponent(levelLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nameMessageLabel)
+                            .addComponent(nameLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(levelMessageLabel)
+                            .addComponent(lavelLabel))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(sudokuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+/**
+ * Action performed when the 'Back' button is clicked.
+ * This method closes the current gameplay window and opens the initial frame for setting the name and difficulty level.
+ */
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+         InitFrame initView = new InitFrame();  // Pass name and level to GameplayFrame
+        initView.setVisible(true);  // Display the GameplayFrame
+        this.dispose();  // Close the InitFrame (optional, based on your flow)
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel RoundMessageLabel;
-    private javax.swing.JLabel levelLabel;
+    /**
+    * Button which come back to init window.
+    */
+    private javax.swing.JButton jButton1;
+    /**
+    * Label displaying the difficulty level of the Sudoku game.
+    */
+    private javax.swing.JLabel lavelLabel;
+    /**
+    * Label displaying the level message text ("Level:").
+    */
     private javax.swing.JLabel levelMessageLabel;
+    /**
+    * Label displaying the user's name.
+    */
     private javax.swing.JLabel nameLabel;
+    /**
+    * Label displaying the name message label.
+    */
     private javax.swing.JLabel nameMessageLabel;
-    private javax.swing.JLabel numberRoundLabel;
+    /**
+    * Panel is responsible for table wraping
+    */
     private javax.swing.JScrollPane sudokuPanel;
+    /**
+    * Table includes buttons for sudoku numbers
+    */
     private javax.swing.JTable sudokuTable;
     // End of variables declaration//GEN-END:variables
 }
