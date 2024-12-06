@@ -13,11 +13,15 @@ import java.util.Map;
  * @author Karol Pitera
  */
 
-@NoArgsConstructor // Lombok: dodaje konstruktor bezargumentowy
-@Getter // Lombok: generuje getter dla `buttonMap`
+@NoArgsConstructor // Lombok: adding default constructor
+@Getter // Lombok: generate getters for `buttonMap`
 public class ButtonModel {
 
     private final Map<Integer, JButton> buttonMap = new HashMap<>();
+    private final Map<Integer, Integer> valueMap = new HashMap<>();
+    
+    // Table that stores the initial layout of the board
+    private final int[][] initialGrid = new int[9][9];
 
 
     /**
@@ -28,29 +32,95 @@ public class ButtonModel {
      */
     public void addButton(int id, JButton button) {
         buttonMap.put(id, button);
+        valueMap.put(id, 0); // Default empty cell
     }
 
+    
     /**
-     * Retrieves a button by its unique ID.
-     * 
-     * @param id the unique ID of the button
-     * @return the JButton corresponding to the given ID
+     * Sets the value for a button by its ID.
+     *
+     * @param id    the unique ID of the button
+     * @param value the value to set (1-9 or 0 for empty)
      */
-    public JButton getButton(int id) {
-        JButton button = buttonMap.get(id);
-        if (button == null) {
-            throw new IllegalArgumentException("Button with ID " + id + " does not exist.");
+    public void setValue(int id, int value) {
+        if (value < 0 || value > 9) {
+            throw new IllegalArgumentException("Value must be between 0 and 9.");
         }
-        return button;
+        valueMap.put(id, value);
+
+        // Aktualizacja tekstu na przycisku
+        JButton button = buttonMap.get(id);
+        if (button != null) {
+            button.setText(value == 0 ? "" : String.valueOf(value));
+        }
+    }
+    
+    
+    /**
+     * Retrieves the value for a button by its ID.
+     *
+     * @param id the unique ID of the button
+     * @return the value corresponding to the button
+     */
+    public int getValue(int id) {
+        return valueMap.getOrDefault(id, 0); // Default value 0
+    }
+
+    
+    int[][] grid = {
+        {5, 3, 0, 0, 7, 0, 0, 0, 0},
+        {6, 0, 0, 1, 9, 5, 0, 0, 0},
+        {0, 9, 8, 0, 0, 0, 0, 6, 0},
+        {8, 0, 0, 0, 6, 0, 0, 0, 3},
+        {4, 0, 0, 8, 0, 3, 0, 0, 1},
+        {7, 0, 0, 0, 2, 0, 0, 0, 6},
+        {0, 6, 0, 0, 0, 0, 2, 8, 0},
+        {0, 0, 0, 4, 1, 9, 0, 0, 5},
+        {0, 0, 0, 0, 8, 0, 0, 7, 9}
+    };
+    
+    /**
+     * Sets the initial grid, typically used to define the starting Sudoku puzzle.
+     *
+     * @param grid the initial Sudoku grid to be used
+     */
+    public void setInitialGrid() {
+        int rowIndex = 0;
+        for (int[] row : grid) {
+            int colIndex = 0;
+            for (int value : row) {
+                initialGrid[rowIndex][colIndex] = value;
+                colIndex++;
+            }
+            rowIndex++;
+        }
     }
 
     /**
-     * Returns all buttons in the model.
-     * 
-     * @return a collection of all buttons
+     * Gets the initial grid for the Sudoku puzzle.
+     *
+     * @return the initial Sudoku grid
      */
-    public Map<Integer, JButton> getAllButtons() {
-        return buttonMap;
+    public int[][] getInitialGrid() {
+        return initialGrid;
+    }
+
+    /**
+     * Resets the grid values to 0, preserving the initial layout.
+     */
+    public void resetGrid() {
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                int id = row * 9 + col;
+                if (initialGrid[row][col] == 0) {
+                    valueMap.put(id, 0);
+                    JButton button = buttonMap.get(id);
+                    if (button != null) {
+                        button.setText(""); // Reset the button's text if it's not a fixed value
+                    }
+                }
+            }
+        }
     }
 }
 

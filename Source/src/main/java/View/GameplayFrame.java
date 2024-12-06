@@ -1,17 +1,29 @@
 package View;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.RequiredArgsConstructor;
+
 import javax.swing.*;
 import javax.swing.BorderFactory;
 import java.awt.*;
 import java.awt.event.*;
 
 
+
 /**
  * GameplayFrame class represents the main game window for the Sudoku application.
  * It displays the Sudoku grid, user name, and selected difficulty level.
  * 
- * @author Karol
+ * @author Karol Pitera
  */
+
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
+
 public class GameplayFrame extends javax.swing.JFrame {
     
     /**
@@ -39,7 +51,6 @@ public class GameplayFrame extends javax.swing.JFrame {
         
         setupSudokuGrid();
         }
-    
  /**
      * Sets up the 9x9 Sudoku grid with interactive buttons.
      */
@@ -47,6 +58,9 @@ public class GameplayFrame extends javax.swing.JFrame {
     buttonModel = new Model.ButtonModel(); // Inicjalizacja modelu
     JButton[][] buttons = new JButton[9][9];
 
+    // Ustawienie początkowej planszy w modelu
+    buttonModel.setInitialGrid();
+    
     for (int row = 0; row < 9; row++) {
         for (int col = 0; col < 9; col++) {
             JButton button = new JButton("");
@@ -61,34 +75,43 @@ public class GameplayFrame extends javax.swing.JFrame {
             }
             button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-            // Generowanie unikalnego ID
+            // Generation unique ID
             int id = row * 9 + col;
+            
             button.setName("cell_" + id);
             button.setToolTipText("Click to enter number");
 
-            // Akcja przycisku
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+            // Set init value from model
+            int value = buttonModel.getInitialGrid()[row][col];
+            buttonModel.addButton(id, button); 
+            buttonModel.setValue(id, value); 
+
+            // Block buttons with init value
+            if (value != 0) {
+                button.setEnabled(false);
+                button.setForeground(Color.BLUE); // Underline init value
+            } else {
+                button.setToolTipText("Click to enter number");
+
+                // Button action for empty cells
+                button.addActionListener(e -> {
                     String input = JOptionPane.showInputDialog("Enter a number (1-9):");
                     if (input != null && input.matches("[1-9]")) {
-                        button.setText(input);
+                        buttonModel.setValue(id, Integer.parseInt(input)); 
                     } else {
                         JOptionPane.showMessageDialog(null, "Invalid input! Please enter a number between 1 and 9.");
                     }
-                }
-            });
+                });
+            }
 
-            // Dodanie przycisku do modelu
-            buttonModel.addButton(id, button);
-
-            // Dodanie przycisku do panelu
             buttons[row][col] = button;
-            sudokuGridPanel.add(button);
+            sudokuGridPanel.add(button); 
         }
     }
+
     sudokuPanel.setViewportView(sudokuGridPanel);
 }
+
 
 
     /**
@@ -225,7 +248,7 @@ public class GameplayFrame extends javax.swing.JFrame {
  * This method closes the current gameplay window and opens the initial frame for setting the name and difficulty level.
  */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         InitFrame initView = new InitFrame();  // Pass name and level to GameplayFrame
+        InitFrame initView = new InitFrame();  // Pass name and level to GameplayFrame
         initView.setVisible(true);  // Display the GameplayFrame
         this.dispose();  // Close the InitFrame (optional, based on your flow)
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -260,4 +283,5 @@ public class GameplayFrame extends javax.swing.JFrame {
     */
     private javax.swing.JTable sudokuTable;
     // End of variables declaration//GEN-END:variables
+
 }
