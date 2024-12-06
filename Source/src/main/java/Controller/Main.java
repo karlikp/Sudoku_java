@@ -36,7 +36,7 @@ public class Main {
      */
     public static void main(String[] args) throws InvalidDifficultyLevelException {
         // Creating model (Player), view (GameView) and controller (GameController)
-        Player model = new Player("your_name", "choose_level");  
+        Player model = new Player("your_name", DifficultyLevel.CHOOSE_LEVEL);  
         InitFrame view = new InitFrame();     
         GameController controller = new GameController(model, view);  
 

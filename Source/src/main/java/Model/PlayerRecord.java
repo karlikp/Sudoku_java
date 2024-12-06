@@ -8,6 +8,22 @@ package Model;
  *
  * @author piter
  */
-public record PlayerRecord(String name, String level) {
-    
+public record PlayerRecord(String name, DifficultyLevel level) {
+  
+//   private String name;
+//    private DifficultyLevel level;
+//    
+//    public PlayerRecord(String name, DifficultyLevel level) {
+//        this.name = name;
+//        this.level = level;
+//    }
+//    
+//    public String name() {
+//        return name;
+//    }
+//
+//    public DifficultyLevel level() {
+//        return level;
+//    }
 }
+
