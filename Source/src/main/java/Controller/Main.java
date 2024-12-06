@@ -1,8 +1,9 @@
 package Controller;
 
-import Model.Player;
+//import Model.Player;
 import Model.*;
 import View.*;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * The main entry point for the game application, responsible for initializing
@@ -16,6 +17,8 @@ import View.*;
  * @author Karol Pitera
  * @version 1.0
  */
+
+@Slf4j  //annotation generate logger which keep information about errors
 public class Main {
     
     /**
@@ -28,10 +31,12 @@ public class Main {
      * @param args command-line arguments passed during the application launch
      *  - first argument is used to set user name
      *  - second argument is used to set difficulty level
+     * 
+     * @throws Model.InvalidDifficultyLevelException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvalidDifficultyLevelException {
         // Creating model (Player), view (GameView) and controller (GameController)
-        Player model = new Player("", "");  
+        Player model = new Player("your_name", "choose_level");  
         InitFrame view = new InitFrame();     
         GameController controller = new GameController(model, view);  
 

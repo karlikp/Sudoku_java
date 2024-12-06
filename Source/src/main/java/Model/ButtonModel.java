@@ -1,5 +1,7 @@
 package Model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,18 +10,15 @@ import java.util.Map;
  * SudokuButtonModel class manages the collection of buttons in the Sudoku grid.
  * It provides methods to interact with the buttons in a type-safe manner.
  * 
- * @author Karol
+ * @author Karol Pitera
  */
+
+@NoArgsConstructor // Lombok: dodaje konstruktor bezargumentowy
+@Getter // Lombok: generuje getter dla `buttonMap`
 public class ButtonModel {
 
-    private final Map<Integer, JButton> buttonMap;
+    private final Map<Integer, JButton> buttonMap = new HashMap<>();
 
-    /**
-     * Initializes the SudokuButtonModel.
-     */
-    public ButtonModel() {
-        this.buttonMap = new HashMap<>();
-    }
 
     /**
      * Adds a button to the model.
@@ -38,7 +37,11 @@ public class ButtonModel {
      * @return the JButton corresponding to the given ID
      */
     public JButton getButton(int id) {
-        return buttonMap.get(id);
+        JButton button = buttonMap.get(id);
+        if (button == null) {
+            throw new IllegalArgumentException("Button with ID " + id + " does not exist.");
+        }
+        return button;
     }
 
     /**

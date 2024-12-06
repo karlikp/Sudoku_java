@@ -10,6 +10,8 @@ package Model;
  * @author Karol Pitera
  * @version 1.0
  */
+
+
 public class InvalidDifficultyLevelException extends Exception {
     
     /**

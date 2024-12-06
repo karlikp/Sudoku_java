@@ -17,32 +17,25 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@ToString
+@ToString(exclude = "playerData") // Możesz wykluczyć playerData z toString
 
 public class Player {
     
-     /** The name of the player. */
-    private String name;
-    
-    /** The difficulty level chosen by the player. */
-    private String difficultyLevel;
-
+    /** The player's data stored in a PlayerRecord. */
     private PlayerRecord playerData;
+    
     /**
      * Constructs a new Player with the specified name and difficulty level.
      *
      * @param name the name of the player
      * @param difficultyLevel the difficulty level chosen by the player
+     * @throws InvalidDifficultyLevelException if the difficulty level is invalid
      */
-    public Player(String name, String difficultyLevel) {
-        this.name = name;
-        this.difficultyLevel = difficultyLevel;
+    public Player(String name, String difficultyLevel)  throws InvalidDifficultyLevelException {   
+        validateDifficultyLevel(difficultyLevel);
         this.playerData = new PlayerRecord(name, difficultyLevel);
     }
     
-    
-
     /**
      * Gets the player's name.
      *
@@ -58,7 +51,7 @@ public class Player {
      * @param name the new name of the player
      */
     public void setName(String name) {
-        this.name = name;
+        this.playerData = new PlayerRecord(name, playerData.level());
     }
 
     /**
@@ -67,7 +60,7 @@ public class Player {
      * @return the difficulty level of the player
      */
     public String getDifficultyLevel() {
-        return difficultyLevel;
+        return playerData.level();
     }
 
      /**
@@ -78,10 +71,23 @@ public class Player {
      * @throws InvalidDifficultyLevelException if the difficulty level is invalid
      */
     public void setDifficultyLevel(String difficultyLevel) throws InvalidDifficultyLevelException {
-        if (!difficultyLevel.equals("Easy") && !difficultyLevel.equals("Medium") && !difficultyLevel.equals("Hard")) {
+        validateDifficultyLevel(difficultyLevel);
+        this.playerData = new PlayerRecord(playerData.name(), difficultyLevel);
+    }
+    
+    /**
+     * Validates the difficulty level.
+     *
+     * @param difficultyLevel the difficulty level to validate
+     * @throws InvalidDifficultyLevelException if the difficulty level is invalid
+     */
+    private void validateDifficultyLevel(String difficultyLevel) throws InvalidDifficultyLevelException {
+        if (difficultyLevel == null || difficultyLevel.trim().isEmpty()) {
+        throw new InvalidDifficultyLevelException("Difficulty level cannot be null or empty. Valid levels are Easy, Medium, or Hard.");
+    }
+        if (!difficultyLevel.equals("Easy") && !difficultyLevel.equals("Medium") && !difficultyLevel.equals("Hard") && !difficultyLevel.equals("choose_level")) {
             throw new InvalidDifficultyLevelException("Invalid difficulty level: " + difficultyLevel + ". Valid levels are Easy, Medium, or Hard.");
         }
-        this.difficultyLevel = difficultyLevel;
     }
 }
 

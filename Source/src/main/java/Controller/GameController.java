@@ -4,6 +4,7 @@ import Model.Player;
 import Model.*;
 import View.*;
 import javax.swing.JOptionPane;
+import lombok.RequiredArgsConstructor;
 
 
 
@@ -18,6 +19,8 @@ import javax.swing.JOptionPane;
  * @author Karol Pitera
  * @version 1.0
  */
+
+@RequiredArgsConstructor
 public class GameController {
     
     /** The model representing the player data. */
@@ -25,17 +28,6 @@ public class GameController {
     
     /** The view for interacting with the user. */
     final private InitFrame view;
-
-    /**
-     * Constructs a new GameController with the specified model and view.
-     *
-     * @param model the Player model containing player data
-     * @param view the GameView instance for user interaction
-     */
-    public GameController(Player model, InitFrame view) {
-        this.model = model;
-        this.view = view;
-    }
     
     /**
      * Checks if the provided difficulty level argument can be converted to an integer.
