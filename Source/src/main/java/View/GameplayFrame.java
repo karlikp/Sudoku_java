@@ -59,7 +59,7 @@ public class GameplayFrame extends javax.swing.JFrame {
     JButton[][] buttons = new JButton[9][9];
 
     // Ustawienie początkowej planszy w modelu
-    buttonModel.setInitialGrid();
+    buttonModel.initCurrentGrid();
     
     for (int row = 0; row < 9; row++) {
         for (int col = 0; col < 9; col++) {
@@ -82,7 +82,7 @@ public class GameplayFrame extends javax.swing.JFrame {
             button.setToolTipText("Click to enter number");
 
             // Set init value from model
-            int value = buttonModel.getInitialGrid()[row][col];
+            int value = buttonModel.getCurrentGrid()[row][col];
             buttonModel.addButton(id, button); 
             buttonModel.setValue(id, value); 
 
