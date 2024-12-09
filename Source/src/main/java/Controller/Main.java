@@ -1,6 +1,5 @@
 package Controller;
 
-//import Model.Player;
 import Model.*;
 import View.*;
 import lombok.extern.slf4j.Slf4j;
@@ -35,17 +34,20 @@ public class Main {
      * @throws Model.InvalidDifficultyLevelException
      */
     public static void main(String[] args) throws InvalidDifficultyLevelException {
-        // Creating model (Player), view (GameView) and controller (GameController)
-        Player model = new Player("your_name", DifficultyLevel.CHOOSE_LEVEL);  
-        InitFrame view = new InitFrame();     
-        GameController controller = new GameController(model, view);  
-
-        // Starting game
-        controller.GameInit(args);  // Controller manage interaction between model and view
+       
+        Player playerModel = new Player("your_name", DifficultyLevel.CHOOSE_LEVEL);  
+            
+        ButtonModel buttonModel = new ButtonModel();
+      
+        GameController controller =
+                new GameController(playerModel, buttonModel); 
         
+         InitFrame initView = new InitFrame(controller);
+
         java.awt.EventQueue.invokeLater(new Runnable() { //java.awt - package: Abstract Window Toolkit
             public void run() {                          //EventQueue - class, invokeLaer - method
-                new InitFrame().setVisible(true);
+               
+                initView.setVisible(true);
                 
             }
         });

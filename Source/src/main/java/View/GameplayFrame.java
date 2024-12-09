@@ -6,15 +6,11 @@ import lombok.ToString;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
-import javax.swing.BorderFactory;
-import java.awt.*;
-import java.awt.event.*;
-
-
 
 /**
- * GameplayFrame class represents the main game window for the Sudoku application.
+ * GameplayFrame represents the main game window for the Sudoku application.
  * It displays the Sudoku grid, user name, and selected difficulty level.
+ * The frame provides functionality to interact with the gameplay interface.
  * 
  * @author Karol Pitera
  */
@@ -27,12 +23,23 @@ import java.awt.event.*;
 public class GameplayFrame extends javax.swing.JFrame {
     
     /**
- * The panel where the Sudoku grid will be displayed.
- */
-    
-    private Model.ButtonModel buttonModel;
-    
+    * The panel where the Sudoku grid will be displayed.
+    */
     private javax.swing.JPanel sudokuGridPanel;
+    
+     /**
+     * The listener for gameplay actions (e.g., button clicks).
+     */
+    private ViewListener viewListener;
+    
+     /**
+     * Sets the listener for gameplay actions.
+     * 
+     * @param listener the listener to handle gameplay actions (e.g., button clicks)
+     */
+    public void setGameplayActionListener(ViewListener listener) {
+    this.viewListener = listener;
+}
 
    /**
      * Creates a new GameplayFrame window.
@@ -48,71 +55,29 @@ public class GameplayFrame extends javax.swing.JFrame {
         
         sudokuGridPanel = new javax.swing.JPanel();
         sudokuGridPanel.setLayout(new java.awt.GridLayout(9, 9));
+        sudokuPanel.setViewportView(sudokuGridPanel);
         
-        setupSudokuGrid();
         }
- /**
-     * Sets up the 9x9 Sudoku grid with interactive buttons.
-     */
-   private void setupSudokuGrid() {
-    buttonModel = new Model.ButtonModel(); // Inicjalizacja modelu
-    JButton[][] buttons = new JButton[9][9];
-
-    // Ustawienie początkowej planszy w modelu
-    buttonModel.initCurrentGrid();
     
-    for (int row = 0; row < 9; row++) {
-        for (int col = 0; col < 9; col++) {
-            JButton button = new JButton("");
-            button.setPreferredSize(new Dimension(67, 67));
-            button.setFont(new java.awt.Font("Arial", java.awt.Font.PLAIN, 20));
-
-            // Ustawienia wizualne
-            if ((row >= 3 && row <= 5) || (col >= 3 && col <= 5)) {
-                button.setBackground(new Color(211, 211, 211));
-            } else {
-                button.setBackground(Color.WHITE);
-            }
-            button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-            // Generation unique ID
-            int id = row * 9 + col;
-            
-            button.setName("cell_" + id);
-            button.setToolTipText("Click to enter number");
-
-            // Set init value from model
-            int value = buttonModel.getCurrentGrid()[row][col];
-            buttonModel.addButton(id, button); 
-            buttonModel.setValue(id, value); 
-
-            // Block buttons with init value
-            if (value != 0) {
-                button.setEnabled(false);
-                button.setForeground(Color.BLUE); // Underline init value
-            } else {
-                button.setToolTipText("Click to enter number");
-
-                // Button action for empty cells
-                button.addActionListener(e -> {
-                    String input = JOptionPane.showInputDialog("Enter a number (1-9):");
-                    if (input != null && input.matches("[1-9]")) {
-                        buttonModel.setValue(id, Integer.parseInt(input)); 
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Invalid input! Please enter a number between 1 and 9.");
-                    }
-                });
-            }
-
-            buttons[row][col] = button;
-            sudokuGridPanel.add(button); 
-        }
+     /**
+     * Sets the viewport for the Sudoku grid panel.
+     */
+    public void setViewportView() {
+        sudokuPanel.setViewportView(sudokuGridPanel);
     }
-
-    sudokuPanel.setViewportView(sudokuGridPanel);
-}
-
-
+ 
+     /**
+     * Adds a button to the Sudoku grid panel.
+     * 
+     * @param button the button to be added to the grid
+     * @throws IllegalStateException if the sudokuGridPanel has not been initialized
+     */
+    public void addToGridPanel(JButton button){
+         if (sudokuGridPanel == null) {
+        throw new IllegalStateException("sudokuGridPanel has not been initialized.");
+    }
+    sudokuGridPanel.add(button);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -243,14 +208,16 @@ public class GameplayFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-/**
- * Action performed when the 'Back' button is clicked.
- * This method closes the current gameplay window and opens the initial frame for setting the name and difficulty level.
- */
+    
+     /**
+     * Action performed when the 'Back' button is clicked.
+     * This method triggers the viewListener to navigate back to the initial 
+     * initFrame
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        InitFrame initView = new InitFrame();  // Pass name and level to GameplayFrame
-        initView.setVisible(true);  // Display the GameplayFrame
-        this.dispose();  // Close the InitFrame (optional, based on your flow)
+      if (viewListener != null) {
+            viewListener.onBackButtonClicked();
+      }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

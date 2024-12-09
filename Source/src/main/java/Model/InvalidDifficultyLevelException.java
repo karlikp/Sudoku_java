@@ -4,13 +4,12 @@ package Model;
 /**
  * Exception thrown when an invalid difficulty level is set for a Player.
  * <p>
- * Valid difficulty levels are in the range 1-3. 
+ * Valid difficulty levels are Easy, Medium, or Hard.
  * </p>
  * 
  * @author Karol Pitera
  * @version 1.0
  */
-
 
 public class InvalidDifficultyLevelException extends Exception {
     

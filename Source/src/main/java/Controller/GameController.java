@@ -1,12 +1,18 @@
 package Controller;
 
-import Model.Player;
 import Model.*;
 import View.*;
-import java.util.Arrays;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 
 
 
@@ -22,15 +28,132 @@ import lombok.RequiredArgsConstructor;
  * @version 1.0
  */
 
-@RequiredArgsConstructor
-public class GameController {
+@Slf4j // Logger for debugging purposes
+@RequiredArgsConstructor // Generates a constructor with required fields (final and @NonNull)
+
+public class GameController implements ViewListener{
+     
+    /** The view representing the gameplay UI. */
+    private GameplayFrame gameplayView;
+    
+     /** The view representing the initialization frame. */
+    private InitFrame initFrame;
     
     /** The model representing the player data. */
-    final private Player model;
+    private final Player playerModel;
+  
+    /** The model representing button data and Sudoku grid. */
+    @Getter
+    private ButtonModel buttonModel;
     
-    /** The view for interacting with the user. */
-    final private InitFrame view;
+    /**
+    * Constructs a GameController with the specified Player and ButtonModel instances.
+    * <p>
+    * This constructor initializes the controller with the provided models, 
+    * which represent the player's data and the state of the Sudoku buttons, respectively.
+    * </p>
+    *
+    * @param playerModel  the model representing player data, including name and difficulty level
+    * @param buttonModel  the model managing the state and interactions of the Sudoku grid buttons
+    */
     
+    public GameController   
+        (Player playerModel,ButtonModel buttonModel){
+       this.playerModel = playerModel;
+       this.buttonModel = buttonModel;
+       
+    }
+    
+     /**
+     * Handles the event of starting the game.
+     *
+     * @param name            the name of the player
+     * @param difficultyLevel the chosen difficulty level
+     */
+    @Override
+    public void onGameStart(String name, String difficultyLevel) {
+        
+        this.gameplayView = new GameplayFrame(name, difficultyLevel);
+        this.gameplayView.setGameplayActionListener(this);
+        gameplayView.setVisible(true);
+
+        setupSudokuGrid();
+    }
+    
+     /**
+     * Handles the event when the back button is clicked.
+     */
+    @Override
+    public void onBackButtonClicked() {
+        this.initFrame = new InitFrame(this);
+        initFrame.setVisible(true);
+        gameplayView.dispose(); 
+    }
+
+    /**
+     * Sets up the 9x9 Sudoku grid with interactive buttons.
+     */
+    private void setupSudokuGrid() {
+    buttonModel = new Model.ButtonModel();
+    JButton[][] buttons = new JButton[9][9];
+
+    buttonModel.initCurrentGrid();
+    
+    for (int row = 0; row < 9; row++) {
+        for (int col = 0; col < 9; col++) {
+            JButton button = new JButton("");
+            button.setPreferredSize(new Dimension(67, 67));
+            button.setFont(new java.awt.Font("Arial", java.awt.Font.PLAIN, 20));
+
+            // visual settings
+            if ((row >= 3 && row <= 5) || (col >= 3 && col <= 5)) {
+                button.setBackground(new Color(211, 211, 211));
+            } else {
+                button.setBackground(Color.WHITE);
+            }
+            button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+            // Generation unique ID
+            int id = row * 9 + col;
+            
+            button.setName("cell_" + id);
+            button.setToolTipText("Click to enter number");
+
+            // Set init value from model
+            int value = buttonModel.getCurrentGrid().get(row).get(col);
+            buttonModel.addButton(id, button); 
+            buttonModel.setValue(id, value); 
+
+            // Block buttons with init value
+            if (value != 0) {
+                button.setEnabled(false);
+                button.setForeground(Color.BLUE); // Underline init value
+            } else {
+                button.setToolTipText("Click to enter number");
+
+                // Button action for empty cells
+                button.addActionListener(e -> {
+                    String input = JOptionPane.showInputDialog("Enter a number (1-9):");
+                    if (input != null && input.matches("[1-9]")) {
+                        buttonModel.setValue(id, Integer.parseInt(input)); 
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid input! Please enter a number between 1 and 9.");
+                    }
+                });
+            }
+
+            buttons[row][col] = button;
+            gameplayView.addToGridPanel(button);
+        }
+    }
+    gameplayView.setViewportView();
+    gameplayView.revalidate();
+    gameplayView.repaint();
+ 
+}
+
+
+   
     /**
      * Checks if the provided difficulty level argument can be converted to an integer.
      * If the input is invalid (not an integer), sets the level to 1 (Easy) by default.
@@ -41,81 +164,15 @@ public class GameController {
     public int checkExceptionForLevel(String arg){
     int level;
     if (arg == null || arg.trim().isEmpty()) {
-        level = 1; // Domyślny poziom trudności
+        level = 1; // Default level is easy
     } else {
         try {
-            level = Integer.parseInt(arg); // Spróbuj przekonwertować na liczbę
-        } catch (NumberFormatException e) { // Obsługa błędu, gdy konwersja się nie powiedzie
+            level = Integer.parseInt(arg); 
+        } catch (NumberFormatException e) { 
             JOptionPane.showMessageDialog(null, "Difficulty level must be an integer. Setting to default level: 1 (Easy).");
-            level = 1; // Domyślny poziom trudności
+            level = 1; 
         }
     }
     return level;
-    }
-
-    /**
-     * Initialization the game, handling input for the player's name and difficulty level.
-     * <p>
-     * If the name and difficulty level are provided as command-line arguments, 
-     * they are used; otherwise, the view prompts the user for input. The method 
-     * then sets the model data and displays a greeting.
-     * </p>
-     *
-     * @param args command-line arguments (expected: player's name and difficulty 
-     * level as an integer)
-     */
-    public void GameInit(String[] args) {
-        
-        String name;
-        String tempLevel;
-        int level;
-        
-        // Checking if arguments are passed from the command line
-        
-        if (args.length >= 2) {
-            name = args[0]; // First argument is name
-            level = checkExceptionForLevel(args[1]);
-        }
-        else{
-        // Retrieve input from the view if command-line arguments are missing    
-        name = view.downloadName();
-        tempLevel = view.downloadDifficultyLevel();
-        level = checkExceptionForLevel(tempLevel);
-        }
-        // Determine difficulty level as a string based on the integer input
-        String difficultyLevel;
-        switch (level) {
-            case 1:
-                difficultyLevel = "Easy";
-                break;
-            case 2:
-                difficultyLevel = "Medium";
-                break;
-            case 3:
-                difficultyLevel = "Hard";
-                break;
-            default:
-                difficultyLevel = "Easy";
-                System.out.println("Wrong choice. Set default difficulty level: Easy.");
-        }
-
-        // Set model data
-        model.setName(name);
-        
-        try {
-            model.setDifficultyLevel(difficultyLevel); // May throw InvalidDifficultyLevelException
-        } catch (InvalidDifficultyLevelException e) {
-            System.out.println("Error: " + e.getMessage());
-            try {
-                model.setDifficultyLevel("Easy"); // Set default level in case of error
-            } catch (InvalidDifficultyLevelException ex) {
-                 System.out.println("Unexpected error: " + ex.getMessage());
-            }
-        }
-
-        // Show gretting
-        //view.showGreeting(model.getName(), model.getDifficultyLevel());
-    }
-    
-    
+    }     
 }

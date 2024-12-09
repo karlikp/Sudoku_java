@@ -16,7 +16,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(exclude = "playerData") // Możesz wykluczyć playerData z toString
+@ToString(exclude = "playerData") // Exclude playerData from toString
 
 
 public class Player {
@@ -45,6 +45,10 @@ public class Player {
         return playerData.name();
     }
     
+    /**
+     * Gets the difficulty level
+     * @return difficulty level
+     */
     public DifficultyLevel getLevel() {
         return playerData.level();
     }
@@ -90,7 +94,17 @@ public class Player {
         throw new InvalidDifficultyLevelException("Difficulty level cannot be null. Valid levels are EASY, MEDIUM, HARD, or CHOOSE_LEVEL.");
     }
     
-    // Validating that the difficulty level is one of the valid enum values
+        /**
+     * Checks if the provided difficulty level is valid.
+     * <p>
+     * This method ensures that the difficulty level is one of the predefined options:
+     * EASY, MEDIUM, HARD, or CHOOSE_LEVEL. If the level is invalid, it throws
+     * an {@link InvalidDifficultyLevelException} with an appropriate error message.
+     * </p>
+     *
+     * @param difficultyLevel the difficulty level to check
+     * @throws InvalidDifficultyLevelException if the difficulty level is not valid
+     */
     if (difficultyLevel != DifficultyLevel.EASY && 
         difficultyLevel != DifficultyLevel.MEDIUM && 
         difficultyLevel != DifficultyLevel.HARD && 

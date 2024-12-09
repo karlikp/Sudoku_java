@@ -16,15 +16,31 @@ import javax.swing.JOptionPane;
 @Setter
 public class InitFrame extends javax.swing.JFrame {
     
+    /**
+     * The listener for the game start event. 
+     * This listener triggers the game to start with the provided user name and difficulty level.
+     */
+    private ViewListener gameStartListener;
+    
+    /**
+     * The name entered by the user.
+     */
     private String name;
+    
+    /**
+     * The selected difficulty level for the game.
+     */
     private String difficultyLevel;
 
-   /**
+    /**
      * Constructor for the InitFrame. Initializes the components and centers the frame on the screen.
+     * 
+     * @param gameStartListener the listener that handles the game start event
      */
-    public InitFrame() {
+    public InitFrame(ViewListener gameStartListener) {
         initComponents();
         setLocationRelativeTo(null); // This will center the frame on the screen
+        this.gameStartListener = gameStartListener;
     }
 
   /**
@@ -99,7 +115,7 @@ public class InitFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-     /**
+    /**
      * This method handles the action when the user presses the "Enter" button.
      * It retrieves the user's name and selected difficulty level, validates the inputs,
      * and opens the GameplayFrame if the inputs are valid.
@@ -109,17 +125,16 @@ public class InitFrame extends javax.swing.JFrame {
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
         
     // Get the user input from text field and combo box
-    name = userName.getText();  // Get user name from text field
-    difficultyLevel = (String) choseLevelComboBox.getSelectedItem();  // Get selected difficulty level
+    name = userName.getText();  
+    difficultyLevel = (String) choseLevelComboBox.getSelectedItem();  
     
     // Validate inputs
     if (name.isEmpty()) {
         JOptionPane.showMessageDialog(null, "Please enter your name.");
+        
     } else {
-        // If inputs are valid, open the GameplayFrame
-        GameplayFrame gameplayFrame = new GameplayFrame(name, difficultyLevel);  // Pass name and level to GameplayFrame
-        gameplayFrame.setVisible(true);  // Display the GameplayFrame
-        this.dispose();  // Close the InitFrame (optional, based on your flow)
+       gameStartListener.onGameStart(name, difficultyLevel);
+       this.dispose();  
     }
     }//GEN-LAST:event_enterButtonActionPerformed
 

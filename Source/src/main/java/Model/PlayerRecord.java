@@ -1,29 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Model;
 
 /**
- *
- * @author piter
+ * A record representing a player in the Sudoku game.
+ * <p>
+ * This record stores the player's name and their chosen difficulty level.
+ * The {@link DifficultyLevel} defines the difficulty of the Sudoku puzzle 
+ * assigned to the player.
+ * </p>
+ * 
+ * @param name the name of the player
+ * @param level the difficulty level chosen by the player
+ * 
+ * @author Karol Pitera
  */
-public record PlayerRecord(String name, DifficultyLevel level) {
-  
-//   private String name;
-//    private DifficultyLevel level;
-//    
-//    public PlayerRecord(String name, DifficultyLevel level) {
-//        this.name = name;
-//        this.level = level;
-//    }
-//    
-//    public String name() {
-//        return name;
-//    }
-//
-//    public DifficultyLevel level() {
-//        return level;
-//    }
-}
-
+public record PlayerRecord(String name, DifficultyLevel level) {}
