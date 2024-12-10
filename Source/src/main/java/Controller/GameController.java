@@ -97,7 +97,7 @@ public class GameController implements ViewListener{
     buttonModel = new Model.ButtonModel();
     JButton[][] buttons = new JButton[9][9];
 
-    buttonModel.initCurrentGrid();
+    buttonModel.setCurrentGrid();
     
     for (int row = 0; row < 9; row++) {
         for (int col = 0; col < 9; col++) {

@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
  * @author Karol Pitera
  */
 
-@NoArgsConstructor // Lombok: adding default constructor
+    @NoArgsConstructor // Lombok: adding default constructor
 @Getter // Lombok: generate getters for `buttonMap`
 public class ButtonModel {
 
@@ -95,7 +95,7 @@ public class ButtonModel {
      * @param value the value to validate
      * @return true if the value can be placed, false otherwise
      */
-    private boolean isValueValid(int row, int col, int value) {
+    public boolean isValueValid(int row, int col, int value) {
         
         // Avoid if it's the same value
         if (currentGrid.get(row).get(col) == value) {
@@ -148,7 +148,9 @@ public class ButtonModel {
    /**
      * Sets the initial grid, typically used to define the starting Sudoku puzzle.
      */
-    public void initCurrentGrid() {
+    public void setCurrentGrid() {
+        currentGrid.clear();
+        
         // Using the initialGrid data to populate the currentGrid list
         for (int row = 0; row < 9; row++) {
             currentGrid.add(new ArrayList<>(initialGrid.get(row)));
@@ -163,29 +165,50 @@ public class ButtonModel {
     public List<List<Integer>> getCurrentGrid() {
         return currentGrid;
     }
-
-    /**
-     * Resets the grid values to 0, preserving the initial layout.
-     * 
-     * <p>
-     * This method clears any user-entered values while keeping
-     * the initial Sudoku puzzle unchanged.
-     * </p>
-     */
-    public void resetGrid() {
-        IntStream.range(0, 9).forEach(row ->           // IntStream to ineration  through each cell
-                IntStream.range(0, 9).forEach(col -> { //for every number in the scope will execute operation in {}
-                    int id = row * 9 + col;
-                     if (initialGrid.get(row).get(col) == 0) {
-                        valueMap.put(id, 0);
-                        currentGrid.get(row).set(col, 0);
-                        JButton button = buttonMap.get(id);
-                        if (button != null) {
-                            button.setText(""); // Reset the button's text if it's not a fixed value
-                        }
-                    }
-                })
-        );
+    
+    public List<List<Integer>> getInitialGrid(){
+        return initialGrid;
     }
+    
+    // Setter for valueMap (for unit testing)
+    public void setValueMap(Map<Integer, Integer> valueMap) {
+        this.valueMap.clear();
+        this.valueMap.putAll(valueMap);
+    }
+
+    // Setter for buttonMap (for unit testing)
+    public void setButtonMap(Map<Integer, JButton> buttonMap) {
+        this.buttonMap.clear();
+        this.buttonMap.putAll(buttonMap);
+    }
+
+//    /**
+//     * Resets the grid values to 0, preserving the initial layout.
+//     * 
+//     * <p>
+//     * This method clears any user-entered values while keeping
+//     * the initial Sudoku puzzle unchanged.
+//     * </p>
+//     */
+//    public void resetGrid() {
+//        IntStream.range(0, 9).forEach(row ->           // IntStream to ineration  through each cell
+//                IntStream.range(0, 9).forEach(col -> { //for every number in the scope will execute operation in {}
+//                    int id = row * 9 + col;
+//                     if (initialGrid.get(row).get(col) == 0) {
+//                        valueMap.put(id, 0);
+//                        currentGrid.get(row).set(col, 0);
+//                        JButton button = buttonMap.get(id);
+//                        if (button != null) {
+//                            button.setText(""); // Reset the button's text if it's not a fixed value
+//                        }
+//                    }
+//                })
+//       );
+//    }
+
+    public void setJOptionPane(JOptionPane jOptionPane) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }
 
