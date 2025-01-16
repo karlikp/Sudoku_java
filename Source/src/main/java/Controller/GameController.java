@@ -121,7 +121,7 @@ public class GameController implements ViewListener{
 
             // Set init value from model
             int value = buttonModel.getCurrentGrid().get(row).get(col);
-            buttonModel.addButton(id, button); 
+            buttonModel.setButton(id, button); 
             buttonModel.setValue(id, value); 
 
             // Block buttons with init value

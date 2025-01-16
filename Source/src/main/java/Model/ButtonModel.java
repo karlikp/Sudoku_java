@@ -39,7 +39,7 @@ public class ButtonModel {
      * @param id     the unique ID of the button
      * @param button the JButton to add
      */
-    public void addButton(int id, JButton button) {
+    public void setButton(int id, JButton button) {
         buttonMap.put(id, button); //example safe collection
         valueMap.put(id, 0); // Default empty cell
     }
@@ -181,30 +181,6 @@ public class ButtonModel {
         this.buttonMap.clear();
         this.buttonMap.putAll(buttonMap);
     }
-
-//    /**
-//     * Resets the grid values to 0, preserving the initial layout.
-//     * 
-//     * <p>
-//     * This method clears any user-entered values while keeping
-//     * the initial Sudoku puzzle unchanged.
-//     * </p>
-//     */
-//    public void resetGrid() {
-//        IntStream.range(0, 9).forEach(row ->           // IntStream to ineration  through each cell
-//                IntStream.range(0, 9).forEach(col -> { //for every number in the scope will execute operation in {}
-//                    int id = row * 9 + col;
-//                     if (initialGrid.get(row).get(col) == 0) {
-//                        valueMap.put(id, 0);
-//                        currentGrid.get(row).set(col, 0);
-//                        JButton button = buttonMap.get(id);
-//                        if (button != null) {
-//                            button.setText(""); // Reset the button's text if it's not a fixed value
-//                        }
-//                    }
-//                })
-//       );
-//    }
 
     public void setJOptionPane(JOptionPane jOptionPane) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
