@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
  * @author Karol Pitera
  */
 
-    @NoArgsConstructor // Lombok: adding default constructor
+//@NoArgsConstructor // Lombok: adding default constructor
 @Getter // Lombok: generate getters for `buttonMap`
 public class ButtonModel {
 
@@ -32,7 +32,11 @@ public class ButtonModel {
      */
     private final List<List<Integer>> currentGrid = new ArrayList<>(9);
 
-
+    
+    public ButtonModel() {
+        setCurrentGrid(); // Initialize currentGrid with the initial grid
+    }
+    
     /**
      * Adds a button to the model.
      * 
@@ -67,6 +71,11 @@ public class ButtonModel {
         
         int row = id / 9;
         int col = id % 9;
+        
+         // Ensure currentGrid is properly initialized
+        if (currentGrid.isEmpty() || currentGrid.size() < 9 || currentGrid.get(row).size() < 9) {
+            throw new IllegalStateException("Grid is not properly initialized.");
+        }
 
         // Validate the value
         if (value != 0 && !isValueValid(row, col, value)) {
@@ -78,9 +87,11 @@ public class ButtonModel {
             );
             return;
         }
+        // Update valueMap and currentGrid
         valueMap.put(id, value);
         currentGrid.get(row).set(col, value);
-
+        
+        // Update the button text if the button exists
         JButton button = buttonMap.get(id);
         if (button != null) {
             button.setText(value == 0 ? "" : String.valueOf(value));
@@ -96,6 +107,16 @@ public class ButtonModel {
      * @return true if the value can be placed, false otherwise
      */
     public boolean isValueValid(int row, int col, int value) {
+        
+        // check correct of index
+        if (row < 0 || row >= 9 || col < 0 || col >= 9) {
+            return false; // incorrect localization
+        }
+        
+        // Check if the value is within the valid range (1-9)
+        if (value < 1 || value > 9) {
+            return false; // Invalid value
+        }
         
         // Avoid if it's the same value
         if (currentGrid.get(row).get(col) == value) {
