@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Start Page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Welcome to Sudoku</h2>
+        <form action="CalculationService" method="POST">
+            <label for="name">Enter your name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <label for="difficulty">Choose difficulty:</label>
+            <select id="difficulty" name="difficulty" required>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select><br><br>
+
+            <input type="submit" value="Start Game" />
+        </form>
+    </body>
+</html>
