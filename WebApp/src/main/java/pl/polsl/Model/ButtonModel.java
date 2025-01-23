@@ -31,13 +31,9 @@ public class ButtonModel {
      * The current state of the Sudoku grid, represented as a list of lists (9x9 grid).
      */
     private final List<List<Integer>> currentGrid = new ArrayList<>(9);
-    
-    private final List<String> history;    // List of operation history
-
-    
+ 
     public ButtonModel() {
         setCurrentGrid(); // Initialize currentGrid with the initial grid
-        history = new ArrayList<>();
     }
     
     /**

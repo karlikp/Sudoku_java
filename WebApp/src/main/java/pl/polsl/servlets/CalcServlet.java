@@ -121,11 +121,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         out.println("</html>");
         
     }
-    
-    
 }
-
-
     /**
      * Handles the HTTP GET request to display the Sudoku grid.
      * Delegates processing to the POST method to avoid code duplication.

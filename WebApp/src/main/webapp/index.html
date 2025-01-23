@@ -6,6 +6,8 @@
     </head>
     <body>
         <h2>Welcome to Sudoku</h2>
+        
+        <!-- Formularz do rozpoczęcia gry -->
         <form action="CalculationService" method="POST">
             <label for="name">Enter your name:</label>
             <input type="text" id="name" name="name" required><br><br>
@@ -19,5 +21,21 @@
 
             <input type="submit" value="Start Game" />
         </form>
+
+        <!-- Sekcja wyświetlania użytkowników -->
+        <h3>Registered Players:</h3>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Number of Games</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%-- Tutaj zostaną wstawione dane z bazy danych przez serwlet --%>
+                <%@ include file="PlayerTableContent.jsp" %>
+            </tbody>
+        </table>
     </body>
 </html>
