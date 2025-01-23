@@ -12,3 +12,9 @@ os.arch=amd64
 os.version=10.0
 derby.system.home=C:\Users\piter\Desktop\Git_repos\Sudoku\DB
 Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Thu Jan 23 16:38:15 CET 2025: Shutting down Derby engine
+----------------------------------------------------------------
+Thu Jan 23 16:38:15 CET 2025:
+Shutting down instance a816c00e-0194-934a-5cf6-ffff992e9aae on database directory C:\Users\piter\Desktop\Git_repos\Sudoku\DB\sample with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@33909752 
+----------------------------------------------------------------

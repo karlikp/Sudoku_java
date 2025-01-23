@@ -1,5 +1,6 @@
 package pl.polsl.servlets;
 
+import jakarta.servlet.ServletContext;
 import pl.polsl.Model.ButtonModel;
 import pl.polsl.Model.DifficultyLevel;
 import pl.polsl.Model.InvalidDifficultyLevelException;
@@ -9,9 +10,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -34,11 +38,52 @@ public class CalcServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs during the response generation
      */
+    
+    @Override
+public void init() throws ServletException {
+    ServletContext context = getServletContext();
+    ButtonModel buttonModel = new ButtonModel();
+    context.setAttribute("buttonModel", buttonModel);
+    }
+        
+        
     @Override
 protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
+    
+   /// Read cookies
+        String lastVisit = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("lastVisit".equals(cookie.getName())) {
+                    lastVisit = cookie.getValue();
+                    break;
+                }
+            }
+        }
 
-    // Pobierz współrzędne i wartość z formularza
+        // Save a new cookie
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = LocalDateTime.now().format(formatter);
+        Cookie newCookie = new Cookie("lastVisit", currentDateTime);
+        response.addCookie(newCookie);
+
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            out.println("<DOCTYPE html>");
+            out.println("<html>");
+
+            if (lastVisit != null) {
+                out.println("<p>Last activity: " + lastVisit + "</p>");
+            }
+    
+    
+
+    ServletContext context = getServletContext();
+    ButtonModel buttonModel = (ButtonModel) context.getAttribute("buttonModel");
+    
+    // Retrieve from data
     String rowParam = request.getParameter("row");
     String colParam = request.getParameter("col");
     String valueParam = request.getParameter("value");
@@ -49,40 +94,35 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             int col = Integer.parseInt(colParam);
             int value = Integer.parseInt(valueParam);
 
-            // Walidacja wartości
+            // Validate value
             if (!buttonModel.isValueValid(row, col, value)) {
                 response.setContentType("text/html;charset=UTF-8");
-                try (PrintWriter out = response.getWriter()) {
                     out.println("<html>");
                     out.println("<body>");
                     out.println("<h3>Error: Invalid move at row " + (row + 1) + ", column " + (col + 1) + "</h3>");
                     out.println("<a href='CalculationService'>Go Back</a>");
                     out.println("</body>");
                     out.println("</html>");
-                }
                 return;
             }
 
-            // Aktualizacja modelu
+            // Update model
             buttonModel.setValue(row * 9 + col, value);
 
         } catch (NumberFormatException e) {
             response.setContentType("text/html;charset=UTF-8");
-            try (PrintWriter out = response.getWriter()) {
                 out.println("<html>");
                 out.println("<body>");
                 out.println("<h3>Error: Invalid input format.</h3>");
                 out.println("<a href='CalculationService'>Go Back</a>");
                 out.println("</body>");
                 out.println("</html>");
-            }
             return;
         }
     }
 
-    // Odswież planszę
+    // Refresh grid
     response.setContentType("text/html;charset=UTF-8");
-    try (PrintWriter out = response.getWriter()) {
         out.println("<!DOCTYPE html>");
         out.println("<html>");
         out.println("<head>");
@@ -91,7 +131,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         out.println("<body>");
         out.println("<h1>Sudoku Game</h1>");
 
-        // Generowanie planszy
+        // Generate grid
         List<List<Integer>> grid = buttonModel.getCurrentGrid();
         for (int i = 0; i < 9; i++) {
             out.println("<div>");
@@ -99,27 +139,27 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                 int value = grid.get(i).get(j);
                 String cellValue = value == 0 ? "" : String.valueOf(value);
 
-                // Formularz dla pojedynczej komórki
+                // Form for a single cell
                 out.println("<form action='CalculationService' method='POST' style='display:inline;'>");
                 out.println("<input type='hidden' name='row' value='" + i + "' />");
                 out.println("<input type='hidden' name='col' value='" + j + "' />");
                 out.println("<input type='text' name='value' value='" + cellValue + "' maxlength='1' size='1' onchange='this.form.submit();' />");
                 out.println("</form>");
             }
-            out.println("</div>");
+            out.println("</div>");      
         }
-
-        out.println("</body>");
-        out.println("</html>");
         
-    // Dodanie przycisku "Historia"
+        //Add the "History" button below the grid
+        
+        out.println("<br>");
         out.println("<form action='HistoryService' method='GET'>");
-        out.println("<button type='submit'>Historia</button>");
+        out.println("<button type='submit'> View History</button>");
         out.println("</form>");
-
+                
+                
         out.println("</body>");
         out.println("</html>");
-        
+              
     }
 }
     /**

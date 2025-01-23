@@ -56,6 +56,12 @@
         <version>5.7.0</version>
         <scope>test</scope>
     </dependency>
+<!--            <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactID>jakarta.servlet-api</artifactID>
+            <version>5.0.0</version>
+            <scope>provided</scope>
+        </dependency>-->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
@@ -73,6 +79,13 @@
             <version>10.14.2.0</version>
         </dependency>
         <!-- JPA -->
+        <dependency>
+            <groupId>org.tomitribe.jkta</groupId>
+            <artifactId>jkta</artifactId>
+            <version>0.12</version>
+            <type>jar</type>
+        </dependency>
+
     </dependencies>
     
     <build>

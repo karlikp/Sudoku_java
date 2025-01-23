@@ -27,6 +27,10 @@ public class ButtonModel {
      */
     private final Map<Integer, Integer> valueMap = new HashMap<>();
     
+    /**A list to store the history of moves. */
+    private final List<String> history = new ArrayList<>();
+    
+    
   /**
      * The current state of the Sudoku grid, represented as a list of lists (9x9 grid).
      */
@@ -36,6 +40,30 @@ public class ButtonModel {
         setCurrentGrid(); // Initialize currentGrid with the initial grid
     }
     
+    /**
+     * Record a move in the history.
+     * 
+     * @param moveDescription a description of the move
+     */
+    public void recordMove(String moveDescription){
+        history.add(moveDescription);
+    }
+    
+    /**
+     * Retrieves
+     * 
+     * @return a list of move descriptions
+     */
+    public List<String> getHistory(){
+        return new ArrayList<>(history); //Return a copy to prevent modification
+    }
+     
+    /**
+     * Clears the history of moves
+     */
+    public void clearHistory(){
+        history.clear();
+    }
     /**
      * Adds a button to the model.
      * 
@@ -92,7 +120,7 @@ public class ButtonModel {
         
         // Add move history
         if (value != 0) {
-            history.add("Set value " + value + " at (" + (row + 1) + ", " + (col + 1) + ")");
+            recordMove("Set value " + value + " at (" + (row + 1) + ", " + (col + 1) + ")");
         }
         
         // Update the button text if the button exists
@@ -211,21 +239,21 @@ public class ButtonModel {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
-    /**
-     * Retrieves the history of operations performed on the Sudoku grid.
-     * 
-     * @return A list of strings describing the operations performed.
-     */
-    public List<String> getHistory() {
-        return history;
-    }
-
-    /**
-     * Clears the history of operations. Useful for resetting the game.
-     */
-    public void clearHistory() {
-        history.clear();
-    }
+//    /**
+//     * Retrieves the history of operations performed on the Sudoku grid.
+//     * 
+//     * @return A list of strings describing the operations performed.
+//     */
+//    public List<String> getHistory() {
+//        return history;
+//    }
+//
+//    /**
+//     * Clears the history of operations. Useful for resetting the game.
+//     */
+//    public void clearHistory() {
+//        history.clear();
+//    }
 
 }
 
