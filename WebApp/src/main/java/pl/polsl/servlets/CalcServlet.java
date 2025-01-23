@@ -23,9 +23,8 @@ import java.util.List;
 public class CalcServlet extends HttpServlet {
 
     // Instance of the ButtonModel class for managing the Sudoku grid
-    //private final ButtonModel buttonModel = new ButtonModel();
-    // Retrieve the shared ButtonModel instance from the ServletContext
-        ButtonModel buttonModel = (ButtonModel) getServletContext().getAttribute("buttonModel");
+    private final ButtonModel buttonModel = new ButtonModel();
+    
     /**
      * Handles the HTTP POST request for starting the Sudoku game.
      * It processes the form data, generates the Sudoku grid, and sends it to the client.

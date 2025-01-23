@@ -12,9 +12,8 @@ import java.util.List;
 @WebServlet(name = "HistoryServlet", urlPatterns = {"/HistoryService"})
 public class HistoryServlet extends HttpServlet {
 
-    //private final ButtonModel buttonModel = new ButtonModel();
-    // Retrieve the shared ButtonModel instance from the ServletContext
-        ButtonModel buttonModel = (ButtonModel) getServletContext().getAttribute("buttonModel");
+    private final ButtonModel buttonModel = new ButtonModel();
+   
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response)
