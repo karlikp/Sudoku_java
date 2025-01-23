@@ -31,10 +31,13 @@ public class ButtonModel {
      * The current state of the Sudoku grid, represented as a list of lists (9x9 grid).
      */
     private final List<List<Integer>> currentGrid = new ArrayList<>(9);
+    
+    private final List<String> history;    // List of operation history
 
     
     public ButtonModel() {
         setCurrentGrid(); // Initialize currentGrid with the initial grid
+        history = new ArrayList<>();
     }
     
     /**
@@ -90,6 +93,11 @@ public class ButtonModel {
         // Update valueMap and currentGrid
         valueMap.put(id, value);
         currentGrid.get(row).set(col, value);
+        
+        // Add move history
+        if (value != 0) {
+            history.add("Set value " + value + " at (" + (row + 1) + ", " + (col + 1) + ")");
+        }
         
         // Update the button text if the button exists
         JButton button = buttonMap.get(id);
@@ -205,6 +213,22 @@ public class ButtonModel {
 
     public void setJOptionPane(JOptionPane jOptionPane) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    /**
+     * Retrieves the history of operations performed on the Sudoku grid.
+     * 
+     * @return A list of strings describing the operations performed.
+     */
+    public List<String> getHistory() {
+        return history;
+    }
+
+    /**
+     * Clears the history of operations. Useful for resetting the game.
+     */
+    public void clearHistory() {
+        history.clear();
     }
 
 }
