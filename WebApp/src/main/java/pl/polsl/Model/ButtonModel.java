@@ -30,6 +30,12 @@ public class ButtonModel {
     /**A list to store the history of moves. */
     private final List<String> history = new ArrayList<>();
     
+    private List<List<Integer>> selectedGrid;
+     
+    private String difficultyLevel;
+    private String password;
+    private String name;
+    
     
   /**
      * The current state of the Sudoku grid, represented as a list of lists (9x9 grid).
@@ -37,7 +43,27 @@ public class ButtonModel {
     private final List<List<Integer>> currentGrid = new ArrayList<>(9);
  
     public ButtonModel() {
+        this.difficultyLevel = "default";        
         setCurrentGrid(); // Initialize currentGrid with the initial grid
+
+    }
+    
+    public String getName() { return name; }
+    public String getPassword() { return password; }
+    public String getDifficultyLevel() { return difficultyLevel; }
+    
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+    
+    public void setDifficultyLevel(String difficultyLevel)
+    {
+        this.difficultyLevel = difficultyLevel;
     }
     
     /**
@@ -186,29 +212,70 @@ public class ButtonModel {
      /**
      * The predefined initial Sudoku grid, represented as a list of lists (9x9 grid).
      */
-    List<List<Integer>> initialGrid = Arrays.asList(
-            Arrays.asList(5, 3, 0, 0, 7, 0, 0, 0, 0),
-            Arrays.asList(6, 0, 0, 1, 9, 5, 0, 0, 0),
-            Arrays.asList(0, 9, 8, 0, 0, 0, 0, 6, 0),
-            Arrays.asList(8, 0, 0, 0, 6, 0, 0, 0, 3),
-            Arrays.asList(4, 0, 0, 8, 0, 3, 0, 0, 1),
-            Arrays.asList(7, 0, 0, 0, 2, 0, 0, 0, 6),
-            Arrays.asList(0, 6, 0, 0, 0, 0, 2, 8, 0),
-            Arrays.asList(0, 0, 0, 4, 1, 9, 0, 0, 5),
-            Arrays.asList(0, 0, 0, 0, 8, 0, 0, 7, 9)
-    );
+     List<List<Integer>> easyGrid = Arrays.asList(
+    Arrays.asList(5, 3, 0, 0, 7, 0, 0, 0, 0),
+    Arrays.asList(6, 0, 0, 1, 9, 5, 0, 0, 0),
+    Arrays.asList(0, 9, 8, 0, 0, 0, 0, 6, 0),
+    Arrays.asList(8, 0, 0, 0, 6, 0, 0, 0, 3),
+    Arrays.asList(4, 0, 0, 8, 0, 3, 0, 0, 1),
+    Arrays.asList(7, 0, 0, 0, 2, 0, 0, 0, 6),
+    Arrays.asList(0, 6, 0, 0, 0, 0, 2, 8, 0),
+    Arrays.asList(0, 0, 0, 4, 1, 9, 0, 0, 5),
+    Arrays.asList(0, 0, 0, 0, 8, 0, 0, 7, 9)
+);
+    
+    List<List<Integer>> mediumGrid = Arrays.asList(
+    Arrays.asList(0, 0, 3, 0, 2, 0, 6, 0, 0),
+    Arrays.asList(9, 0, 0, 3, 0, 5, 0, 0, 1),
+    Arrays.asList(0, 0, 1, 8, 0, 6, 4, 0, 0),
+    Arrays.asList(0, 0, 8, 1, 0, 2, 9, 0, 0),
+    Arrays.asList(7, 0, 0, 0, 0, 0, 0, 0, 8),
+    Arrays.asList(0, 0, 6, 7, 0, 8, 2, 0, 0),
+    Arrays.asList(0, 0, 2, 6, 0, 9, 5, 0, 0),
+    Arrays.asList(8, 0, 0, 2, 0, 3, 0, 0, 9),
+    Arrays.asList(0, 0, 5, 0, 1, 0, 3, 0, 0)
+);
+    
+    List<List<Integer>> hardGrid = Arrays.asList(
+    Arrays.asList(0, 0, 0, 6, 0, 0, 4, 0, 0),
+    Arrays.asList(7, 0, 0, 0, 0, 3, 6, 0, 0),
+    Arrays.asList(0, 0, 0, 0, 9, 1, 0, 8, 0),
+    Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0),
+    Arrays.asList(0, 5, 0, 1, 8, 0, 0, 0, 3),
+    Arrays.asList(0, 0, 0, 3, 0, 6, 0, 4, 5),
+    Arrays.asList(0, 4, 0, 2, 0, 0, 0, 6, 0),
+    Arrays.asList(9, 0, 3, 0, 0, 0, 0, 0, 0),
+    Arrays.asList(0, 2, 0, 0, 0, 0, 1, 0, 0)
+);
     
    /**
      * Sets the initial grid, typically used to define the starting Sudoku puzzle.
      */
-    public void setCurrentGrid() {
-        currentGrid.clear();
-        
-        // Using the initialGrid data to populate the currentGrid list
-        for (int row = 0; row < 9; row++) {
-            currentGrid.add(new ArrayList<>(initialGrid.get(row)));
+   public void setCurrentGrid() {
+    currentGrid.clear();
+   
+    switch (this.difficultyLevel.toLowerCase()) {
+        case "default":
+            selectedGrid = easyGrid;
+            break;
+        case "easy":
+            selectedGrid = easyGrid;
+            break;
+        case "medium":
+            selectedGrid = mediumGrid;
+            break;
+        case "hard":
+            selectedGrid = hardGrid;
+            break;
+        default:
+            throw new IllegalArgumentException("Invalid difficulty level: " + this.difficultyLevel);
         }
-    }
+    
+            // Using the initialGrid data to populate the currentGrid list
+        for (int row = 0; row < 9; row++) {
+            currentGrid.add(new ArrayList<>(selectedGrid.get(row)));
+        }   
+   }
 
     /**
      * Gets the initial grid for the Sudoku puzzle.
@@ -220,7 +287,7 @@ public class ButtonModel {
     }
     
     public List<List<Integer>> getInitialGrid(){
-        return initialGrid;
+        return selectedGrid;
     }
     
     // Setter for valueMap (for unit testing)

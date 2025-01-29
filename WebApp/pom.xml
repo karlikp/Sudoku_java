@@ -15,15 +15,15 @@
     <dependencies>
         <!-- Hibernate jako implementacja JPA -->
     <dependency>
-        <groupId>org.hibernate</groupId>
+        <groupId>org.hibernate.orm</groupId>
         <artifactId>hibernate-core</artifactId>
         <version>6.0.0.Final</version>
     </dependency>
     
     <!-- Sterownik bazy danych MySQL -->
     <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
+        <groupId>com.mysql</groupId>
+        <artifactId>mysql-connector-j</artifactId>
         <version>8.0.33</version>
     </dependency>
     
@@ -56,12 +56,12 @@
         <version>5.7.0</version>
         <scope>test</scope>
     </dependency>
-<!--            <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactID>jakarta.servlet-api</artifactID>
-            <version>5.0.0</version>
-            <scope>provided</scope>
-        </dependency>-->
+    <dependency>
+        <groupId>jakarta.servlet</groupId>
+        <artifactId>jakarta.servlet-api</artifactId>
+        <version>5.0.0</version>
+        <scope>provided</scope>
+    </dependency>
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
@@ -85,6 +85,12 @@
             <version>0.12</version>
             <type>jar</type>
         </dependency>
+          <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>2.1.214</version>
+        <scope>runtime</scope>
+    </dependency>
 
     </dependencies>
     

@@ -50,7 +50,7 @@ public void init() throws ServletException {
     @Override
 protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-    
+
    /// Read cookies
         String lastVisit = null;
         Cookie[] cookies = request.getCookies();
@@ -78,10 +78,23 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                 out.println("<p>Last activity: " + lastVisit + "</p>");
             }
     
-    
-
     ServletContext context = getServletContext();
     ButtonModel buttonModel = (ButtonModel) context.getAttribute("buttonModel");
+    
+   
+    // Get data and use it once for game
+    if (buttonModel.getDifficultyLevel() == "default"){
+ 
+        // Pobieranie danych z formularza
+        String name = request.getParameter("name");
+        String password = request.getParameter("password");
+        String difficultyLevel = request.getParameter("difficulty");
+        
+        buttonModel.setName(name);
+        buttonModel.setPassword(password);
+        buttonModel.setDifficultyLevel(difficultyLevel);
+        buttonModel.setCurrentGrid();
+    }
     
     // Retrieve from data
     String rowParam = request.getParameter("row");
