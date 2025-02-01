@@ -1,28 +1,40 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Start Page</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
-    <body>
-        <h2>Welcome to Sudoku</h2>
-        
-        <!-- Formularz do rozpoczęcia gry -->
-        <form action="CalculationService" method="POST">
-            <label for="name">Enter your name:</label>
-            <input type="text" id="name" name="name" required><br><br>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Page</title>
+    <style>
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Welcome to Sudoku</h2>
 
-            <label for="password">Enter your password:</label>
-            <input type="password" id="password" name="password" required><br><br>
+    <!-- Formularz do rozpoczęcia gry -->
+    <form action="CalculationService" method="POST">
+        <label for="name">Enter your name:</label>
+        <input type="text" id="name" name="name" required minlength="3" maxlength="15"
+               pattern="[A-Za-z0-9]{3,15}" title="Username must be between 3 and 15 characters and contain only letters and numbers.">
+        <br><br>
 
-            <label for="difficulty">Choose difficulty:</label>
-            <select id="difficulty" name="difficulty" required>
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
-            </select><br><br>
+        <label for="password">Enter your password:</label>
+        <input type="password" id="password" name="password" required>
+        <br><br>
 
-            <input type="submit" value="Start Game" />
-        </form>
-    </body>
+        <label for="difficulty">Choose difficulty:</label>
+        <select id="difficulty" name="difficulty" required>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+        <br><br>
+
+        <input type="submit" value="Start Game">
+    </form>
+</body>
 </html>
