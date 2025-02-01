@@ -1,17 +1,17 @@
-<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
-    <persistence-unit name="my_persistence_person" transaction-type="RESOURCE_LOCAL">
-        <class>pl.polsl.Model.Player</class>
-        <class>pl.polsl.Model.DifficultyLevel</class>
-        <properties>
-            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/lab"/>
-            <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value="password"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
-            
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <property name="hibernate.show_sql" value="true"/>
-        </properties>
-    </persistence-unit>
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+  <persistence-unit name="sudoku_persistence_unit" transaction-type="RESOURCE_LOCAL">
+    <class>pl.polsl.entities.GameEntity</class>
+    <class>pl.polsl.entities.PlayerEntity</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="jakarta.persistence.jdbc.driver" value="org.apache.derby.client.ClientAutoloadedDriver"/>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:derby://localhost:1527/sudoku;create=true"/>
+      <property name="jakarta.persistence.jdbc.user" value="app"/>
+      <property name="jakarta.persistence.jdbc.password" value="app"/>
+      <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+      <property name="jakarta.persistence.schema-generation.create-source" value="metadata"/>
+      <property name="jakarta.persistence.schema-generation.scripts.create-target" value="target/jpa/sql/create-schema.sql"/>
+    </properties>
+  </persistence-unit>
 </persistence>
