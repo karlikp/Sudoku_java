@@ -3,6 +3,7 @@
   <persistence-unit name="sudoku_persistence_unit" transaction-type="RESOURCE_LOCAL">
     <class>pl.polsl.entities.GameEntity</class>
     <class>pl.polsl.entities.PlayerEntity</class>
+    <class>pl.polsl.entities.MovementEntity</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="jakarta.persistence.jdbc.driver" value="org.apache.derby.client.ClientAutoloadedDriver"/>
@@ -12,6 +13,7 @@
       <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
       <property name="jakarta.persistence.schema-generation.create-source" value="metadata"/>
       <property name="jakarta.persistence.schema-generation.scripts.create-target" value="target/jpa/sql/create-schema.sql"/>
+<!--      <property name="jakarta.persistence.schema-generation.database.action" value="update"/>-->
     </properties>
   </persistence-unit>
 </persistence>

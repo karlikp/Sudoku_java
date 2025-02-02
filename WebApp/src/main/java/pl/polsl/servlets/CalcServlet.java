@@ -43,6 +43,7 @@
        private final ButtonModel buttonModel = new ButtonModel();
         private boolean logIn = false;
         private EntityManager em = null;
+        private GameEntity currentGame = null;
 
         /**
          * Handles the HTTP POST request for starting the Sudoku game.
@@ -63,6 +64,7 @@
 
             em = (EntityManager) ctx.getAttribute("entityManager");
             if (em == null) {
+                System.out.println("Inicjalizacja EntityManager");
                 var emf = Persistence.createEntityManagerFactory("sudoku_persistence_unit");
                 em = emf.createEntityManager();
                 ctx.setAttribute("entityManager", em);
@@ -87,6 +89,7 @@
 
             // Read last visit cookie
             String lastVisit = null;
+            
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
@@ -102,13 +105,14 @@
             String currentDateTime = LocalDateTime.now().format(formatter);
             Cookie newCookie = new Cookie("lastVisit", currentDateTime);
             response.addCookie(newCookie);
+            
 
             response.setContentType("text/html;charset=UTF-8");
             try (PrintWriter out = response.getWriter()) {
                 out.println("<!DOCTYPE html>");
                 out.println("<html>");
                 if (lastVisit != null) {
-                    out.println("<p>Last activity: " + lastVisit + "</p>");
+                    out.println("<p>[Cookie] Last activity: " + lastVisit + "</p>");
                 }
 
                 ServletContext context = getServletContext();
@@ -117,15 +121,21 @@
                 // Retrieve and store player data
                 if (buttonModel.getDifficultyLevel().equals("default")) {
                     // Retrieve user parameters
+                    
                     String name = request.getParameter("name");
                     String password = request.getParameter("password");
                     String difficultyLevel = request.getParameter("difficulty");
+                    
+                    buttonModel.setDifficultyLevel(difficultyLevel);
+                    buttonModel.setCurrentGrid();
 
                     if (name != null && password != null) {
                 PlayerEntity existingPlayer = getPlayerByName(name);
 
                 if (existingPlayer != null) {
                     // 🔍 Sprawdzamy poprawność hasła
+                    this.currentGame = new GameEntity(difficultyLevel, existingPlayer);
+                    persistObject(this.currentGame);
                     if (existingPlayer.getPassword().equals(password)) {  // W przyszłości warto zahashować hasła
                         request.getSession().setAttribute("user", existingPlayer);
                     } else {
@@ -139,8 +149,8 @@
 
                     // Tworzenie nowej gry dla nowego użytkownika
                     if (difficultyLevel != null) {
-                        GameEntity game = new GameEntity(difficultyLevel, newPlayer);
-                        persistObject(game);
+                        this.currentGame = new GameEntity(difficultyLevel, newPlayer);
+                        persistObject(this.currentGame);
                     }
 
                     request.getSession().setAttribute("user", newPlayer);
@@ -174,6 +184,21 @@
 
                 // Update model
                 buttonModel.setValue(row * 9 + col, value);
+                // Updata DB
+                
+                try {
+                    if (this.currentGame == null) {
+                        System.err.println("⛔ Błąd: currentGame jest null!");
+                        return;
+                        }
+                    System.out.println("Saving move to database: Row=" + row + ", Col=" + col + ", Value=" + value);
+                    MovementEntity movement = new MovementEntity(this.currentGame, value, row, col);
+                    persistObject(movement);
+                    System.out.println("Move saved successfully.");
+                } catch (Exception e) {
+                    System.err.println("Error while saving move: " + e.getMessage());
+                    e.printStackTrace();
+}
 
             } catch (NumberFormatException e) {
                 response.setContentType("text/html;charset=UTF-8");
@@ -333,37 +358,54 @@
 
 
        // Displays the database in a new tab
-       private void showDatabase(HttpServletResponse response) throws IOException {
-        response.setContentType("text/html;charset=UTF-8");
+private void showDatabase(HttpServletResponse response) throws IOException {
+    response.setContentType("text/html;charset=UTF-8");
 
-        try (PrintWriter out = response.getWriter()) {
-            out.println("<!DOCTYPE html>");
-            out.println("<html><head><title>Database</title></head><body>");
-            out.println("<h2>Players</h2>");
-            out.println("<table border='1'><tr><th>ID</th><th>Name</th></tr>");
+    try (PrintWriter out = response.getWriter()) {
+        out.println("<!DOCTYPE html>");
+        out.println("<html><head><title>Database</title></head><body>");
+        
+        // 🎯 Wyświetlenie tabeli graczy
+        out.println("<h2>Players</h2>");
+        out.println("<table border='1'><tr><th>ID</th><th>Name</th></tr>");
 
-            // Retrieve the list of players
-            List<PlayerEntity> players = em.createQuery("SELECT p FROM PlayerEntity p", PlayerEntity.class).getResultList();
-            for (PlayerEntity player : players) {
-                out.println("<tr><td>" + player.getId() + "</td><td>" + player.getName() + "</td></tr>");
-            }
-            out.println("</table>");
-
-            out.println("<h2>Games</h2>");
-            out.println("<table border='1'><tr><th>ID</th><th>Difficulty</th><th>Player ID</th></tr>");
-
-            // Retrieve the list of games
-            List<GameEntity> games = em.createQuery("SELECT g FROM GameEntity g", GameEntity.class).getResultList();
-            for (GameEntity game : games) {
-                out.println("<tr><td>" + game.getId() + "</td><td>" + game.getDifficultyLevel() + "</td><td>" + game.getPlayer().getId() + "</td></tr>");
-            }
-            out.println("</table>");
-
-            out.println("<br><a href='javascript:window.close();'>Close</a>");
-            out.println("</body></html>");
+        List<PlayerEntity> players = em.createQuery("SELECT p FROM PlayerEntity p", PlayerEntity.class).getResultList();
+        for (PlayerEntity player : players) {
+            out.println("<tr><td>" + player.getId() + "</td><td>" + player.getName() + "</td></tr>");
         }
+        out.println("</table>");
+
+        // 🎯 Wyświetlenie tabeli gier
+        out.println("<h2>Games</h2>");
+        out.println("<table border='1'><tr><th>ID</th><th>Difficulty</th><th>Player ID</th></tr>");
+
+        List<GameEntity> games = em.createQuery("SELECT g FROM GameEntity g", GameEntity.class).getResultList();
+        for (GameEntity game : games) {
+            out.println("<tr><td>" + game.getId() + "</td><td>" + game.getDifficultyLevel() + "</td><td>" + game.getPlayer().getId() + "</td></tr>");
+        }
+        out.println("</table>");
+
+        // 🎯 Wyświetlenie tabeli ruchów
+        out.println("<h2>Movements</h2>");
+        out.println("<table border='1'><tr><th>ID</th><th>Game ID</th><th>Move Digit</th><th>Row</th><th>Column</th></tr>");
+
+        List<MovementEntity> movements = em.createQuery("SELECT m FROM MovementEntity m", MovementEntity.class).getResultList();
+        for (MovementEntity movement : movements) {
+            out.println("<tr><td>" + movement.getId() + "</td><td>" 
+                        + movement.getGame().getId() + "</td><td>" 
+                        + movement.getMoveDigit() + "</td><td>" 
+                        + movement.getRow() + "</td><td>" 
+                        + movement.getColNumber() + "</td></tr>");
+        }
+        out.println("</table>");
+
+        // Zamknięcie strony
+        out.println("<br><a href='javascript:window.close();'>Close</a>");
+        out.println("</body></html>");
     }
-    }
+
+   }
+}
 
 
 
