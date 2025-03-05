@@ -11,15 +11,15 @@ A Sudoku game with the ability to register players and save their moves to a dat
  - Payara server
  - Maven
 
-## 3. Installation:
+## 2. Installation:
 ```bash
 git clone THE REPO
 ```
 
-## 4. Usage:
+## 3. Usage:
 ```bash
 cd path/to/AHRS
 python3 main.py
 ```
 
-## 5. Gallery:
+## 4. Gallery:
