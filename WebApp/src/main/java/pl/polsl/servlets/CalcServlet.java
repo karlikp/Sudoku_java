@@ -59,6 +59,8 @@
         // one-time opening of entity manager
         public void init() throws ServletException {
         try {
+            System.out.println("DEBUG");
+            
             ServletContext ctx = getServletContext();
             ctx.setAttribute("buttonModel", buttonModel);
 
@@ -365,7 +367,7 @@ private void showDatabase(HttpServletResponse response) throws IOException {
         out.println("<!DOCTYPE html>");
         out.println("<html><head><title>Database</title></head><body>");
         
-        // 🎯 Wyświetlenie tabeli graczy
+        // Show player table
         out.println("<h2>Players</h2>");
         out.println("<table border='1'><tr><th>ID</th><th>Name</th></tr>");
 
@@ -375,7 +377,7 @@ private void showDatabase(HttpServletResponse response) throws IOException {
         }
         out.println("</table>");
 
-        // 🎯 Wyświetlenie tabeli gier
+        // Show game table
         out.println("<h2>Games</h2>");
         out.println("<table border='1'><tr><th>ID</th><th>Difficulty</th><th>Player ID</th></tr>");
 
