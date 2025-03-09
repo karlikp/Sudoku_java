@@ -1,0 +1,14 @@
+Sun Mar 09 17:19:49 CET 2025 : Apache Derby Network Server - 10.17.1.0 - (1913217) started and ready to accept connections on port 1527
+----------------------------------------------------------------
+Sun Mar 09 17:19:49 CET 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.17.1.0 - (1913217): instance a816c00e-0195-7bb4-9c89-00003a213e47 
+on database directory C:\Users\piter\Desktop\Git_repos\Sudoku_java\derby_db\bin\sudoku with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@33909752 
+Loaded from file:/C:/Users/piter/Desktop/Git_repos/Sudoku_java/derby_db/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=21.0.4+8-LTS-274
+user.dir=C:\Users\piter\Desktop\Git_repos\Sudoku_java\derby_db
+os.name=Windows 11
+os.arch=amd64
+os.version=10.0
+derby.system.home=C:\Users\piter\Desktop\Git_repos\Sudoku_java\derby_db\bin
+Database Class Loader started - derby.database.classpath=''
